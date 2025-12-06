@@ -160,6 +160,61 @@ The `theme-processor.py` script:
 ./theme-manager.sh help
 ```
 
+## Theme Toggle Flow
+
+When you press `Super+Ctrl+T` (or your configured keybind), here's what happens:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Keybind (niri/sway/etc)                                        │
+│  Super+Ctrl+T → fish -c toggle_theme                            │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  toggle_theme (Fish function)                                   │
+│  1. Read current theme from ~/.config/theme_mode                │
+│  2. Write new theme ("dark" or "light") to file                 │
+│  3. Call set_dark_theme or set_light_theme                      │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  set_dark_theme / set_light_theme (Fish functions)              │
+│                                                                 │
+│  Direct updates:                                                │
+│  • Fish colors     → source generated/fish/{mode}.theme         │
+│  • FZF colors      → set_fzf_colors function                    │
+│  • Tide prompt     → source generated/tide/{mode}.theme         │
+│  • GTK settings    → update settings.ini + gsettings            │
+│                                                                 │
+│  File copy + reload:                                            │
+│  • Wezterm         → touch config to trigger hot-reload         │
+│  • Mako            → cp to ~/.config/mako/config + makoctl reload│
+│  • Waybar          → cp to ~/.config/waybar/style.css + SIGUSR2 │
+└─────────────────────────────────────────────────────────────────┘
+                      │
+                      │ (parallel - via file watchers)
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Auto-updating apps (watch ~/.config/theme_mode)                │
+│                                                                 │
+│  • Neovim          → vim.uv file watcher in colorscheme.lua     │
+│                      re-applies colorscheme on change           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `~/.config/theme_mode` | Stores current theme ("dark" or "light") |
+| `~/.config/fish/functions/toggle_theme.fish` | Main toggle function |
+| `~/.config/fish/functions/set_dark_theme.fish` | Applies dark theme to all apps |
+| `~/.config/fish/functions/set_light_theme.fish` | Applies light theme to all apps |
+| `~/.config/nvim/lua/plugins/colorscheme.lua` | Neovim file watcher |
+| `~/.config/fish/conf.d/theme_watcher.fish` | Fish prompt theme checker |
+
 ## Tool-Specific Integration
 
 ### Neovim
