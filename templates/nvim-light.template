@@ -306,10 +306,27 @@ hl("DiagnosticUnnecessary", { fg = c.comment, undercurl = true })
 hl("LspCodeLens", { fg = c.fg_muted })
 hl("LspSignatureActiveParameter", { sp = c.fg, underline = true })
 
--- Semantic Tokens - clear them
-for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-  vim.api.nvim_set_hl(0, group, {})
-end
+-- Semantic Tokens - explicitly link to themed groups
+hl("@lsp.type.variable", { link = "Identifier" })
+hl("@lsp.type.parameter", { link = "Identifier" })
+hl("@lsp.type.property", { link = "@property" })
+hl("@lsp.type.function", { link = "Function" })
+hl("@lsp.type.method", { link = "Function" })
+hl("@lsp.type.keyword", { link = "Keyword" })
+hl("@lsp.type.comment", { link = "Comment" })
+hl("@lsp.type.string", { link = "String" })
+hl("@lsp.type.number", { link = "Number" })
+hl("@lsp.type.operator", { link = "Operator" })
+hl("@lsp.type.type", { link = "Type" })
+hl("@lsp.type.class", { link = "Type" })
+hl("@lsp.type.interface", { link = "Type" })
+hl("@lsp.type.namespace", { link = "@namespace" })
+hl("@lsp.type.enum", { link = "Type" })
+hl("@lsp.type.enumMember", { link = "Constant" })
+hl("@lsp.mod.readonly", {})
+hl("@lsp.mod.defaultLibrary", {})
+hl("@lsp.typemod.variable.readonly", { link = "Identifier" })
+hl("@lsp.typemod.variable.defaultLibrary", { link = "Identifier" })
 
 -- ************** PLUGINS **************
 -- folke/lazy.nvim
