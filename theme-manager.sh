@@ -45,23 +45,22 @@ check_dependencies() {
     fi
 }
 
-# Get system appearance (macOS)
-get_system_appearance() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        defaults read -g AppleInterfaceStyle 2>/dev/null || echo "Light"
+# Theme mode file
+THEME_MODE_FILE="$HOME/.config/theme_mode"
+
+# Get current theme mode from file
+get_current_theme() {
+    if [[ -f "$THEME_MODE_FILE" ]]; then
+        cat "$THEME_MODE_FILE"
     else
-        echo "Light"  # Default fallback
+        echo "dark"  # Default fallback
     fi
 }
 
-# Get current theme mode
-get_current_theme() {
-    local appearance=$(get_system_appearance)
-    if [[ "$appearance" == "Dark" ]]; then
-        echo "dark"
-    else
-        echo "light"
-    fi
+# Set theme mode to file
+set_theme_mode() {
+    local mode=$1
+    echo "$mode" > "$THEME_MODE_FILE"
 }
 
 # Extract color from JSON
@@ -200,6 +199,33 @@ apply_tool_theme() {
                 log_warning "Fish shell not found, Tide theme not applied"
             fi
             ;;
+        "wezterm")
+            # Copy generated theme to wezterm directory
+            mkdir -p "$HOME/.config/wezterm/colors"
+            cp "$generated_file" "$HOME/.config/wezterm/colors/${theme_mode}.lua"
+            # Wezterm hot-reloads on config touch (handled in apply_system_theme)
+            log_success "Applied Wezterm ${theme_mode} theme"
+            ;;
+        "spotify-player")
+            # Copy generated theme to spotify-player config
+            local spotify_theme_dir="$HOME/.config/spotify-player"
+            mkdir -p "$spotify_theme_dir"
+            cp "$generated_file" "$spotify_theme_dir/theme.toml"
+            log_success "Applied spotify-player theme (restart app to apply)"
+            ;;
+        "rofi")
+            # Copy generated theme to rofi directory
+            mkdir -p "$HOME/.config/rofi/themes"
+            cp "$generated_file" "$HOME/.config/rofi/themes/custom-${theme_mode}.rasi"
+            log_success "Applied Rofi ${theme_mode} theme"
+            ;;
+        "opencode")
+            # Copy generated theme to opencode config
+            local opencode_dir="$HOME/.config/opencode"
+            mkdir -p "$opencode_dir"
+            cp "$generated_file" "$opencode_dir/theme.json"
+            log_success "Applied opencode theme"
+            ;;
         *)
             log_warning "Unknown tool: $tool"
             return 1
@@ -223,21 +249,78 @@ apply_all() {
     log_success "All themes applied for $theme_mode mode"
 }
 
+# Apply system-wide theme settings (GTK, gsettings, wezterm hot-reload)
+apply_system_theme() {
+    local theme_mode=$1
+    local gtk_theme
+
+    if [[ "$theme_mode" == "dark" ]]; then
+        gtk_theme="prefer-dark"
+    else
+        gtk_theme="prefer-light"
+    fi
+
+    # Update GTK 3.0 settings
+    local gtk3_settings="$HOME/.config/gtk-3.0/settings.ini"
+    if [[ -f "$gtk3_settings" ]]; then
+        if grep -q "gtk-application-prefer-dark-theme" "$gtk3_settings"; then
+            if [[ "$theme_mode" == "dark" ]]; then
+                sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' "$gtk3_settings"
+            else
+                sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' "$gtk3_settings"
+            fi
+        fi
+        log_success "Updated GTK 3.0 settings"
+    fi
+
+    # Update GTK 4.0 settings
+    local gtk4_settings="$HOME/.config/gtk-4.0/settings.ini"
+    if [[ -f "$gtk4_settings" ]]; then
+        if grep -q "gtk-application-prefer-dark-theme" "$gtk4_settings"; then
+            if [[ "$theme_mode" == "dark" ]]; then
+                sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' "$gtk4_settings"
+            else
+                sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' "$gtk4_settings"
+            fi
+        fi
+        log_success "Updated GTK 4.0 settings"
+    fi
+
+    # Update gsettings color scheme (for GNOME/GTK apps)
+    if command -v gsettings &> /dev/null; then
+        gsettings set org.gnome.desktop.interface color-scheme "$gtk_theme" 2>/dev/null || true
+        log_success "Updated gsettings color-scheme"
+    fi
+
+    # Touch wezterm config to trigger hot-reload
+    local wezterm_config="$HOME/.config/wezterm/wezterm.lua"
+    if [[ -f "$wezterm_config" ]]; then
+        touch "$wezterm_config"
+        log_success "Triggered Wezterm hot-reload"
+    fi
+}
+
 # Switch theme mode
 switch_theme() {
     local theme_mode=$1
-    
+
     if [[ "$theme_mode" != "dark" && "$theme_mode" != "light" ]]; then
         log_error "Invalid theme mode: $theme_mode. Use 'dark' or 'light'"
         return 1
     fi
-    
+
     log_info "Switching to $theme_mode theme..."
-    
+
+    # Write theme mode to file (this triggers file watchers like Neovim)
+    set_theme_mode "$theme_mode"
+
     # Generate and apply all themes
     generate_all "$theme_mode"
     apply_all "$theme_mode"
-    
+
+    # Apply system-wide settings
+    apply_system_theme "$theme_mode"
+
     log_success "Theme switched to $theme_mode mode"
 }
 
@@ -261,11 +344,10 @@ auto_theme() {
 # Show current theme status
 status() {
     local current_theme=$(get_current_theme)
-    local system_appearance=$(get_system_appearance)
-    
+
     echo "=== Theme Status ==="
-    echo "System Appearance: $system_appearance"
     echo "Current Theme: $current_theme"
+    echo "Theme Mode File: $THEME_MODE_FILE"
     echo "Themes Directory: $THEMES_DIR"
     echo "Colors File: $COLORS_FILE"
     echo ""
