@@ -185,13 +185,14 @@ When you press `Super+Ctrl+T` (or your configured keybind), here's what happens:
 │  Direct updates:                                                │
 │  • Fish colors     → source generated/fish/{mode}.theme         │
 │  • FZF colors      → set_fzf_colors function                    │
-│  • Tide prompt     → source generated/tide/{mode}.theme         │
+│  • Tide prompt     → always dark (looks good in both modes)     │
 │  • GTK settings    → update settings.ini + gsettings            │
 │                                                                 │
 │  File copy + reload:                                            │
 │  • Wezterm         → touch config to trigger hot-reload         │
 │  • Mako            → cp to ~/.config/mako/config + makoctl reload│
 │  • Waybar          → cp to ~/.config/waybar/style.css + SIGUSR2 │
+│  • spotify-player  → cp to theme.toml (restart required)        │
 └─────────────────────────────────────────────────────────────────┘
                       │
                       │ (parallel - via file watchers)
@@ -235,33 +236,13 @@ When you press `Super+Ctrl+T` (or your configured keybind), here's what happens:
 
 ### Fish Shell / FZF / Tide
 
-**Auto-switching**: Add `theme_watcher.fish` to `~/.config/fish/conf.d/`:
+- **Fish & FZF**: Switch with system theme
+- **Tide**: Always uses dark theme (looks good on both light and dark backgrounds)
 
-```fish
-# Theme watcher - automatically refresh when theme changes
-set -g __theme_watcher_last_mode ""
-
-function __theme_watcher_check --on-event fish_prompt
-    set -l theme_file "$HOME/.config/theme_mode"
-    set -l themes_dir "$HOME/.config/themes/generated"
-
-    if test -f $theme_file
-        set -l current_mode (cat $theme_file)
-        if test "$current_mode" != "$__theme_watcher_last_mode"
-            set -g __theme_watcher_last_mode $current_mode
-
-            # Source fish and fzf themes (tide stays dark)
-            source "$themes_dir/fish/$current_mode.theme" 2>/dev/null
-            source "$themes_dir/fzf/$current_mode.theme" 2>/dev/null
-        end
-    end
-end
-
-# Always use dark Tide (looks good in both modes)
-source "$HOME/.config/themes/generated/tide/dark.theme" 2>/dev/null
-
-__theme_watcher_check
-```
+**Auto-switching**: The `theme_watcher.fish` in `~/.config/fish/conf.d/` handles this:
+- Checks `~/.config/theme_mode` on each prompt
+- Sources Fish and FZF themes when mode changes
+- Always sources dark Tide theme on shell start
 
 ### Wezterm
 
