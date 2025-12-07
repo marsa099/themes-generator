@@ -129,12 +129,22 @@ apply_tool_theme() {
     local tool=$1
     local theme_mode=$2
     local generated_file="$GENERATED_DIR/${tool}/${theme_mode}.theme"
-    
-    if [[ ! -f "$generated_file" ]]; then
+
+    # Some tools don't need a generated file (they update config directly)
+    local no_generated_file_needed=("rofi")
+    local needs_file=true
+    for skip_tool in "${no_generated_file_needed[@]}"; do
+        if [[ "$tool" == "$skip_tool" ]]; then
+            needs_file=false
+            break
+        fi
+    done
+
+    if [[ "$needs_file" == true && ! -f "$generated_file" ]]; then
         log_error "Generated theme file not found: $generated_file"
         return 1
     fi
-    
+
     case "$tool" in
         "nvim")
             # Copy generated colorscheme to nvim colors directory
@@ -214,10 +224,14 @@ apply_tool_theme() {
             log_success "Applied spotify-player theme (restart app to apply)"
             ;;
         "rofi")
-            # Copy generated theme to rofi directory
-            mkdir -p "$HOME/.config/rofi/themes"
-            cp "$generated_file" "$HOME/.config/rofi/themes/custom-${theme_mode}.rasi"
-            log_success "Applied Rofi ${theme_mode} theme"
+            # Update rofi config.rasi to import the correct theme
+            local rofi_config="$HOME/.config/rofi/config.rasi"
+            if [[ -f "$rofi_config" ]]; then
+                sed -i "s/@import \".*\.rasi\"/@import \"${theme_mode}.rasi\"/" "$rofi_config"
+                log_success "Applied Rofi ${theme_mode} theme"
+            else
+                log_warning "Rofi config not found: $rofi_config"
+            fi
             ;;
         "opencode")
             # Copy generated theme to opencode config
@@ -236,16 +250,20 @@ apply_tool_theme() {
 # Apply all themes
 apply_all() {
     local theme_mode=${1:-$(get_current_theme)}
-    
+
     log_info "Applying all themes for $theme_mode mode..."
-    
+
+    # Apply themes that have generated files
     for tool_dir in "$GENERATED_DIR"/*; do
         if [[ -d "$tool_dir" ]]; then
             local tool=$(basename "$tool_dir")
             apply_tool_theme "$tool" "$theme_mode"
         fi
     done
-    
+
+    # Apply tools that don't need generated files (config modification only)
+    apply_tool_theme "rofi" "$theme_mode"
+
     log_success "All themes applied for $theme_mode mode"
 }
 
