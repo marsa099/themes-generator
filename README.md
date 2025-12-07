@@ -26,6 +26,7 @@ theme-generator/
 ├── colors.json          # Single source of truth for all colors
 ├── theme-manager.sh     # Generation and application script
 ├── theme-processor.py   # Template processing engine
+├── theme-viewer/        # Visual theme editor webapp (Next.js)
 ├── templates/           # Template files with placeholders
 │   ├── nvim-dark.template
 │   ├── nvim-light.template
@@ -337,6 +338,30 @@ Rofi theme switching works by updating the `@import` statement in `~/.config/rof
 
 Requires existing `dark.rasi` and `light.rasi` theme files in `~/.config/rofi/`.
 
+## Theme Editor Webapp
+
+A visual editor for modifying theme colors with live preview.
+
+### Running the Editor
+
+```bash
+cd theme-viewer
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Features
+
+- **Code Preview**: See how colors look in a syntax-highlighted code block
+- **Color Picker**: Click any color to edit it with HSL sliders
+- **Semantic Mapping**: View and edit how semantic colors (error, warning, keyword) map to accent colors
+- **Dark/Light Toggle**: Switch between theme modes
+- **Save Changes**: Writes directly to `colors.json`
+
+After saving changes in the webapp, run `./theme-manager.sh switch dark` to regenerate and apply themes.
+
 ## Workflow
 
 ### Daily Usage
@@ -346,6 +371,15 @@ Requires existing `dark.rasi` and `light.rasi` theme files in `~/.config/rofi/`.
 ```
 
 ### Modifying Colors
+
+**Option 1: Visual Editor (recommended)**
+```bash
+cd theme-viewer && npm run dev
+# Edit colors in browser, save
+./theme-manager.sh switch dark
+```
+
+**Option 2: Direct Edit**
 ```bash
 # 1. Edit colors.json
 vim colors.json
