@@ -4,12 +4,14 @@ interface CodePreviewProps {
   theme: ColorTheme;
   onColorClick: (category: string, name: string, color: string) => void;
   fontFamily?: string;
+  language?: 'typescript' | 'csharp';
 }
 
 export function CodePreview({
   theme,
   onColorClick,
   fontFamily = '"BerkeleyMono Nerd Font", "Berkeley Mono", monospace',
+  language = 'typescript',
 }: CodePreviewProps) {
   return (
     <div
@@ -20,8 +22,24 @@ export function CodePreview({
         fontFamily,
       }}
     >
-      <div className="space-y-1">
-        <div>
+      {language === 'typescript' ? (
+        <TypeScriptPreview theme={theme} onColorClick={onColorClick} />
+      ) : (
+        <CSharpPreview theme={theme} onColorClick={onColorClick} />
+      )}
+    </div>
+  );
+}
+
+interface PreviewProps {
+  theme: ColorTheme;
+  onColorClick: (category: string, name: string, color: string) => void;
+}
+
+function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
+  return (
+    <div className="space-y-1">
+      <div>
           <span
             className="cursor-pointer hover:underline"
             style={{ color: theme.semantic.comment, fontStyle: "italic" }}
@@ -571,6 +589,237 @@ export function CodePreview({
           <span style={{ color: theme.foreground.primary }}>{"}"}</span>
         </div>
       </div>
+  );
+}
+
+function CSharpPreview({ theme, onColorClick }: PreviewProps) {
+  const kw = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.keyword }}
+      onClick={() => onColorClick("semantic", "keyword", theme.semantic.keyword)}
+    >
+      {text}
+    </span>
+  );
+
+  const ty = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.type }}
+      onClick={() => onColorClick("semantic", "type", theme.semantic.type)}
+    >
+      {text}
+    </span>
+  );
+
+  const str = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.string }}
+      onClick={() => onColorClick("semantic", "string", theme.semantic.string)}
+    >
+      {text}
+    </span>
+  );
+
+  const attr = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.attribute || theme.foreground.primary }}
+      onClick={() => {
+        if (theme.semantic.attribute) {
+          onColorClick("semantic", "attribute", theme.semantic.attribute);
+        } else {
+          onColorClick("foreground", "primary", theme.foreground.primary);
+        }
+      }}
+    >
+      {text}
+    </span>
+  );
+
+  const method = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.method }}
+      onClick={() => onColorClick("semantic", "method", theme.semantic.method)}
+    >
+      {text}
+    </span>
+  );
+
+  const op = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.operator }}
+      onClick={() => onColorClick("semantic", "operator", theme.semantic.operator)}
+    >
+      {text}
+    </span>
+  );
+
+  const fn = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.function }}
+      onClick={() => onColorClick("semantic", "function", theme.semantic.function)}
+    >
+      {text}
+    </span>
+  );
+
+  const plain = (text: string) => (
+    <span style={{ color: theme.foreground.primary }}>{text}</span>
+  );
+
+  const comment = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.comment, fontStyle: "italic" }}
+      onClick={() => onColorClick("semantic", "comment", theme.semantic.comment)}
+    >
+      {text}
+    </span>
+  );
+
+  const xmlComment = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.comment, fontStyle: "italic" }}
+      onClick={() => onColorClick("semantic", "comment", theme.semantic.comment)}
+    >
+      {text}
+    </span>
+  );
+
+  return (
+    <div className="space-y-1">
+      {/* Using directives */}
+      <div>{kw("using")} {ty("System")}{plain(";")}</div>
+      <div>{kw("using")} {ty("System.Linq")}{plain(";")}</div>
+      <div>{kw("using")} {ty("Microsoft.AspNetCore.Mvc")}{plain(";")}</div>
+
+      {/* Empty line */}
+      <div>&nbsp;</div>
+
+      {/* Namespace */}
+      <div>{kw("namespace")} {ty("Api.Controllers")}</div>
+      <div>{plain("{")}</div>
+
+      {/* XML doc comment */}
+      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// <summary>")}</div>
+      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// Handles user-related API operations")}</div>
+      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// </summary>")}</div>
+
+      {/* Attributes */}
+      <div style={{ paddingLeft: "1rem" }}>{plain("[")}{attr("ApiController")}{plain("]")}</div>
+      <div style={{ paddingLeft: "1rem" }}>{plain("[")}{attr("Route")}{plain("(")}{str("\"api/[controller]\"")}{plain(")]")}</div>
+
+      {/* Class declaration with interface */}
+      <div style={{ paddingLeft: "1rem" }}>
+        {kw("public")} {kw("class")} {ty("UserController")} {plain(":")} {ty("ControllerBase")}{plain(",")} {ty("IUserController")}
+      </div>
+      <div style={{ paddingLeft: "1rem" }}>{plain("{")}</div>
+
+      {/* Private field */}
+      <div style={{ paddingLeft: "2rem" }}>
+        {kw("private")} {kw("readonly")} {ty("IUserService")} {plain("_service;")}
+      </div>
+
+      {/* Empty line */}
+      <div>&nbsp;</div>
+
+      {/* Constructor */}
+      <div style={{ paddingLeft: "2rem" }}>
+        {kw("public")} {fn("UserController")}{plain("(")}{ty("IUserService")} {plain("service)")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "3rem" }}>
+        {plain("_service")} {op("=")} {plain("service;")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("}")}</div>
+
+      {/* Empty line */}
+      <div>&nbsp;</div>
+
+      {/* XML doc for method */}
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// <summary>")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// Gets a user by their unique identifier")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// </summary>")}</div>
+
+      {/* Method with long route */}
+      <div style={{ paddingLeft: "2rem" }}>
+        {plain("[")}{attr("HttpGet")}{plain("(")}{str("\"organizations/{orgId}/departments/{deptId}/users/{userId}\"")}{plain(")]")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>
+        {kw("public")} {kw("async")} {ty("Task")}{plain("<")}{ty("ActionResult")}{plain("<")}{ty("User")}{plain("?>>")}{" "}
+        {fn("GetById")}{plain("(")}{ty("int")} {plain("userId)")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
+
+      {/* Method body */}
+      <div style={{ paddingLeft: "3rem" }}>
+        {kw("var")} {plain("user")} {op("=")} {kw("await")} {plain("_service.")}{method("FindAsync")}{plain("(userId);")}
+      </div>
+      <div style={{ paddingLeft: "3rem" }}>
+        {kw("if")} {plain("(user")} {kw("is")} {kw("null")}{plain(")")}
+      </div>
+      <div style={{ paddingLeft: "3rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "4rem" }}>
+        {kw("return")} {method("NotFound")}{plain("(")}{str("$\"User ")}{plain("{userId}")}{str(" was not found\"")}{plain(");")}
+      </div>
+      <div style={{ paddingLeft: "3rem" }}>{plain("}")}</div>
+      <div style={{ paddingLeft: "3rem" }}>
+        {kw("return")} {method("Ok")}{plain("(user);")}
+      </div>
+
+      <div style={{ paddingLeft: "2rem" }}>{plain("}")}</div>
+      <div style={{ paddingLeft: "1rem" }}>{plain("}")}</div>
+
+      {/* Separator */}
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay }}>
+        {comment("// Record type")}
+      </div>
+
+      {/* Record */}
+      <div style={{ paddingLeft: "1rem" }}>
+        {kw("public")} {kw("record")} {ty("User")}{plain("(")}{ty("int")} {plain("Id,")} {ty("string")}{plain("?")} {plain("Name,")} {ty("bool")} {plain("IsActive);")}
+      </div>
+
+      {/* Separator */}
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay }}>
+        {comment("// LINQ example")}
+      </div>
+
+      {/* LINQ */}
+      <div style={{ paddingLeft: "1rem" }}>
+        {kw("var")} {plain("activeUsers")} {op("=")} {plain("users")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>
+        {plain(".")}{method("Where")}{plain("(u")} {op("=>")} {plain("u.")}<span
+          className="cursor-pointer hover:underline"
+          style={{ color: theme.semantic.boolean }}
+          onClick={() => onColorClick("semantic", "boolean", theme.semantic.boolean)}
+        >IsActive</span>{plain(")")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>
+        {plain(".")}{method("OrderBy")}{plain("(u")} {op("=>")} {plain("u.Name)")}
+      </div>
+      <div style={{ paddingLeft: "2rem" }}>
+        {plain(".")}{method("ToList")}{plain("();")}
+      </div>
+
+      {/* Throw with string interpolation */}
+      <div className="mt-4" style={{ paddingLeft: "1rem" }}>
+        {kw("throw")} {kw("new")} <span
+          className="cursor-pointer hover:underline"
+          style={{ color: theme.semantic.error }}
+          onClick={() => onColorClick("semantic", "error", theme.semantic.error)}
+        >InvalidOperationException</span>{plain("(")}{str("$\"User ")}{plain("{id}")}{str(" not found\"")}{plain(");")}
+      </div>
+
+      <div>{plain("}")}</div>
     </div>
   );
 }

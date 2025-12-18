@@ -7,6 +7,7 @@ import { ColorPicker } from "./theme/ColorPicker";
 import { ColorGrid } from "./theme/ColorGrid";
 import { SaveChanges } from "./theme/SaveChanges";
 import { ThemeData, ColorTheme, ColorPickerState } from "./theme/types";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   hexToHsl,
   resolveColor,
@@ -24,6 +25,7 @@ export function ThemeColors() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
+  const [previewLanguage, setPreviewLanguage] = useState<"typescript" | "csharp">("typescript");
 
   const loadTheme = async () => {
     try {
@@ -278,12 +280,23 @@ export function ThemeColors() {
               borderBottom: `1px solid ${theme.background.overlay}`,
             }}
           >
-            <h2 className="text-2xl font-semibold mb-2">Code Preview</h2>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-2xl font-semibold">Code Preview</h2>
+              <Tabs
+                value={previewLanguage}
+                onValueChange={(v) => setPreviewLanguage(v as "typescript" | "csharp")}
+              >
+                <TabsList theme={theme}>
+                  <TabsTrigger value="typescript" theme={theme}>TypeScript</TabsTrigger>
+                  <TabsTrigger value="csharp" theme={theme}>C#</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
             <p style={{ color: theme.foreground.secondary }}>
               Click any color to edit it
             </p>
           </div>
-          <CodePreview theme={theme} onColorClick={handleColorClick} />
+          <CodePreview theme={theme} onColorClick={handleColorClick} language={previewLanguage} />
         </div>
 
         <ColorGrid
