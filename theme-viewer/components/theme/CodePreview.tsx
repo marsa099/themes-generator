@@ -708,22 +708,22 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
       <div>{plain("{")}</div>
 
       {/* XML doc comment */}
-      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// <summary>")}</div>
-      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// Handles user-related API operations")}</div>
-      <div style={{ paddingLeft: "1rem" }}>{xmlComment("/// </summary>")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// <summary>")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// Handles user-related API operations")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// </summary>")}</div>
 
       {/* Attributes */}
-      <div style={{ paddingLeft: "1rem" }}>{plain("[")}{attr("ApiController")}{plain("]")}</div>
-      <div style={{ paddingLeft: "1rem" }}>{plain("[")}{attr("Route")}{plain("(")}{str("\"api/[controller]\"")}{plain(")]")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("[")}{attr("ApiController")}{plain("]")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("[")}{attr("Route")}{plain("(")}{str("\"api/[controller]\"")}{plain(")]")}</div>
 
       {/* Class declaration with interface */}
-      <div style={{ paddingLeft: "1rem" }}>
+      <div style={{ paddingLeft: "2rem" }}>
         {kw("public")} {kw("class")} {ty("UserController")} {plain(":")} {ty("ControllerBase")}{plain(",")} {ty("IUserController")}
       </div>
-      <div style={{ paddingLeft: "1rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
 
       {/* Private field */}
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {kw("private")} {kw("readonly")} {ty("IUserService")} {plain("_service;")}
       </div>
 
@@ -731,51 +731,51 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
       <div>&nbsp;</div>
 
       {/* Constructor */}
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {kw("public")} {fn("UserController")}{plain("(")}{ty("IUserService")} {plain("service)")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
-      <div style={{ paddingLeft: "3rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "6rem" }}>
         {plain("_service")} {op("=")} {plain("service;")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>{plain("}")}</div>
+      <div style={{ paddingLeft: "4rem" }}>{plain("}")}</div>
 
       {/* Empty line */}
       <div>&nbsp;</div>
 
       {/* XML doc for method */}
-      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// <summary>")}</div>
-      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// Gets a user by their unique identifier")}</div>
-      <div style={{ paddingLeft: "2rem" }}>{xmlComment("/// </summary>")}</div>
+      <div style={{ paddingLeft: "4rem" }}>{xmlComment("/// <summary>")}</div>
+      <div style={{ paddingLeft: "4rem" }}>{xmlComment("/// Gets a user by their unique identifier")}</div>
+      <div style={{ paddingLeft: "4rem" }}>{xmlComment("/// </summary>")}</div>
 
       {/* Method with long route */}
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {plain("[")}{attr("HttpGet")}{plain("(")}{str("\"organizations/{orgId}/departments/{deptId}/users/{userId}\"")}{plain(")]")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {kw("public")} {kw("async")} {ty("Task")}{plain("<")}{ty("ActionResult")}{plain("<")}{ty("User")}{plain("?>>")}{" "}
         {fn("GetById")}{plain("(")}{ty("int")} {plain("userId)")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
 
       {/* Method body */}
-      <div style={{ paddingLeft: "3rem" }}>
+      <div style={{ paddingLeft: "6rem" }}>
         {kw("var")} {plain("user")} {op("=")} {kw("await")} {plain("_service.")}{method("FindAsync")}{plain("(userId);")}
       </div>
-      <div style={{ paddingLeft: "3rem" }}>
+      <div style={{ paddingLeft: "6rem" }}>
         {kw("if")} {plain("(user")} {kw("is")} {kw("null")}{plain(")")}
       </div>
-      <div style={{ paddingLeft: "3rem" }}>{plain("{")}</div>
-      <div style={{ paddingLeft: "4rem" }}>
+      <div style={{ paddingLeft: "6rem" }}>{plain("{")}</div>
+      <div style={{ paddingLeft: "8rem" }}>
         {kw("return")} {method("NotFound")}{plain("(")}{str("$\"User ")}{plain("{userId}")}{str(" was not found\"")}{plain(");")}
       </div>
-      <div style={{ paddingLeft: "3rem" }}>{plain("}")}</div>
-      <div style={{ paddingLeft: "3rem" }}>
+      <div style={{ paddingLeft: "6rem" }}>{plain("}")}</div>
+      <div style={{ paddingLeft: "6rem" }}>
         {kw("return")} {method("Ok")}{plain("(user);")}
       </div>
 
+      <div style={{ paddingLeft: "4rem" }}>{plain("}")}</div>
       <div style={{ paddingLeft: "2rem" }}>{plain("}")}</div>
-      <div style={{ paddingLeft: "1rem" }}>{plain("}")}</div>
 
       {/* Separator */}
       <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay }}>
@@ -783,7 +783,7 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
       </div>
 
       {/* Record */}
-      <div style={{ paddingLeft: "1rem" }}>
+      <div style={{ paddingLeft: "2rem" }}>
         {kw("public")} {kw("record")} {ty("User")}{plain("(")}{ty("int")} {plain("Id,")} {ty("string")}{plain("?")} {plain("Name,")} {ty("bool")} {plain("IsActive);")}
       </div>
 
@@ -793,25 +793,25 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
       </div>
 
       {/* LINQ */}
-      <div style={{ paddingLeft: "1rem" }}>
+      <div style={{ paddingLeft: "2rem" }}>
         {kw("var")} {plain("activeUsers")} {op("=")} {plain("users")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {plain(".")}{method("Where")}{plain("(u")} {op("=>")} {plain("u.")}<span
           className="cursor-pointer hover:underline"
           style={{ color: theme.semantic.boolean }}
           onClick={() => onColorClick("semantic", "boolean", theme.semantic.boolean)}
         >IsActive</span>{plain(")")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {plain(".")}{method("OrderBy")}{plain("(u")} {op("=>")} {plain("u.Name)")}
       </div>
-      <div style={{ paddingLeft: "2rem" }}>
+      <div style={{ paddingLeft: "4rem" }}>
         {plain(".")}{method("ToList")}{plain("();")}
       </div>
 
       {/* Throw with string interpolation */}
-      <div className="mt-4" style={{ paddingLeft: "1rem" }}>
+      <div className="mt-4" style={{ paddingLeft: "2rem" }}>
         {kw("throw")} {kw("new")} <span
           className="cursor-pointer hover:underline"
           style={{ color: theme.semantic.error }}
