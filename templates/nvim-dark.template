@@ -47,6 +47,10 @@ local c = {
   string = "{{dark.semantic.string}}",
   ["function"] = "{{dark.semantic.function}}",
   type = "{{dark.semantic.type}}",
+  class = "{{dark.semantic.class}}",
+  interface = "{{dark.semantic.interface}}",
+  struct = "{{dark.semantic.struct}}",
+  enum = "{{dark.semantic.enum}}",
   number = "{{dark.semantic.number}}",
   boolean = "{{dark.semantic.boolean}}",
   variable = "{{dark.semantic.variable}}",
@@ -324,10 +328,11 @@ hl("@lsp.type.string", { link = "String" })
 hl("@lsp.type.number", { link = "Number" })
 hl("@lsp.type.operator", { link = "Operator" })
 hl("@lsp.type.type", { link = "Type" })
-hl("@lsp.type.class", { link = "Type" })
-hl("@lsp.type.interface", { link = "Type" })
+hl("@lsp.type.class", { fg = c.class })
+hl("@lsp.type.interface", { fg = c.interface })
+hl("@lsp.type.struct", { fg = c.struct })
 hl("@lsp.type.namespace", { link = "@namespace" })
-hl("@lsp.type.enum", { link = "Type" })
+hl("@lsp.type.enum", { fg = c.enum })
 hl("@lsp.type.enumMember", { link = "Constant" })
 hl("@lsp.mod.readonly", {})
 hl("@lsp.mod.defaultLibrary", {})

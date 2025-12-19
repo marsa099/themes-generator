@@ -613,6 +613,26 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
     </span>
   );
 
+  const cls = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.class || theme.semantic.type }}
+      onClick={() => onColorClick("semantic", "class", theme.semantic.class || theme.semantic.type)}
+    >
+      {text}
+    </span>
+  );
+
+  const iface = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.interface || theme.semantic.type }}
+      onClick={() => onColorClick("semantic", "interface", theme.semantic.interface || theme.semantic.type)}
+    >
+      {text}
+    </span>
+  );
+
   const str = (text: string) => (
     <span
       className="cursor-pointer hover:underline"
@@ -718,13 +738,13 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* Class declaration with interface */}
       <div style={{ paddingLeft: "2rem" }}>
-        {kw("public")} {kw("class")} {ty("UserController")} {plain(":")} {ty("ControllerBase")}{plain(",")} {ty("IUserController")}
+        {kw("public")} {kw("class")} {cls("UserController")} {plain(":")} {cls("ControllerBase")}{plain(",")} {iface("IUserController")}
       </div>
       <div style={{ paddingLeft: "2rem" }}>{plain("{")}</div>
 
       {/* Private field */}
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("private")} {kw("readonly")} {ty("IUserService")} {plain("_service;")}
+        {kw("private")} {kw("readonly")} {iface("IUserService")} {plain("_service;")}
       </div>
 
       {/* Empty line */}
@@ -732,7 +752,7 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* Constructor */}
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("public")} {fn("UserController")}{plain("(")}{ty("IUserService")} {plain("service)")}
+        {kw("public")} {fn("UserController")}{plain("(")}{iface("IUserService")} {plain("service)")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
       <div style={{ paddingLeft: "6rem" }}>
@@ -753,7 +773,7 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         {plain("[")}{attr("HttpGet")}{plain("(")}{str("\"organizations/{orgId}/departments/{deptId}/users/{userId}\"")}{plain(")]")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("public")} {kw("async")} {ty("Task")}{plain("<")}{ty("ActionResult")}{plain("<")}{ty("User")}{plain("?>>")}{" "}
+        {kw("public")} {kw("async")} {ty("Task")}{plain("<")}{ty("ActionResult")}{plain("<")}{cls("User")}{plain("?>>")}{" "}
         {fn("GetById")}{plain("(")}{ty("int")} {plain("userId)")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
@@ -778,17 +798,17 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
       <div style={{ paddingLeft: "2rem" }}>{plain("}")}</div>
 
       {/* Separator */}
-      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay }}>
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay, paddingLeft: "2rem" }}>
         {comment("// Record type")}
       </div>
 
       {/* Record */}
       <div style={{ paddingLeft: "2rem" }}>
-        {kw("public")} {kw("record")} {ty("User")}{plain("(")}{ty("int")} {plain("Id,")} {ty("string")}{plain("?")} {plain("Name,")} {ty("bool")} {plain("IsActive);")}
+        {kw("public")} {kw("record")} {cls("User")}{plain("(")}{ty("int")} {plain("Id,")} {ty("string")}{plain("?")} {plain("Name,")} {ty("bool")} {plain("IsActive);")}
       </div>
 
       {/* Separator */}
-      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay }}>
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.background.overlay, paddingLeft: "2rem" }}>
         {comment("// LINQ example")}
       </div>
 
