@@ -1,6 +1,6 @@
 * {
   font-family: "GeistMono NF", "GeistMono Nerd Font", "Geist Mono", monospace;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 0;
   border: none;
   border-radius: 0;
@@ -29,6 +29,50 @@ window#waybar {
 
 .modules-left #custom-weather {
   color: {{accent.cyan}};
+}
+
+#custom-screencast {
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  color: #ff4444;
+  border-radius: 0;
+  animation: pulse 2s steps(2) infinite;
+}
+
+#custom-screencast.inactive {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  animation: none;
+}
+
+#custom-camera {
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  color: #ff4444;
+  border-radius: 0;
+  animation: pulse 2s steps(2) infinite;
+}
+
+#custom-camera.inactive {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Center module */
