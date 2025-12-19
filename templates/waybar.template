@@ -31,6 +31,30 @@ window#waybar {
   color: {{accent.cyan}};
 }
 
+#cpu,
+#memory {
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  color: {{foreground.primary}};
+  border-radius: 0;
+}
+
+#cpu.medium,
+#memory.medium {
+  color: {{accent.yellow}};
+}
+
+#cpu.elevated,
+#memory.elevated {
+  color: {{accent.orange}};
+}
+
+#cpu.critical,
+#memory.critical {
+  color: {{accent.red}};
+}
+
 #custom-screencast {
   padding: 6px 12px;
   margin: 0;
