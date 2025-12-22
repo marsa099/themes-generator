@@ -127,36 +127,53 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
           <span style={{ color: theme.foreground.primary }}>;</span>
         </div>
 
-        <div style={{ paddingLeft: "1rem" }}>
+        <div
+          className="cursor-pointer -mx-6 px-6"
+          style={{ backgroundColor: theme.background.warningLine, paddingLeft: "calc(1rem + 1.5rem)" }}
+          onClick={() => onColorClick("background", "warningLine", theme.background.warningLine)}
+        >
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.keyword }}
-            onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "keyword", theme.semantic.keyword);
+            }}
           >
             const
           </span>{" "}
           <span style={{ color: theme.foreground.primary }}>prefix</span>{" "}
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.operator }}
-            onClick={() =>
-              onColorClick("semantic", "operator", theme.semantic.operator)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "operator", theme.semantic.operator);
+            }}
           >
             =
           </span>{" "}
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.string }}
-            onClick={() =>
-              onColorClick("semantic", "string", theme.semantic.string)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "string", theme.semantic.string);
+            }}
           >
             "Item: "
           </span>
           <span style={{ color: theme.foreground.primary }}>;</span>
+          <span
+            className="hover:underline ml-4"
+            style={{ color: theme.semantic.comment, fontStyle: "italic" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "comment", theme.semantic.comment);
+            }}
+          >
+            // unused variable
+          </span>
         </div>
 
         <div style={{ paddingLeft: "1rem" }}>
@@ -329,41 +346,49 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
           <span style={{ color: theme.foreground.primary }}>;</span>
         </div>
 
-        <div>
+        <div
+          className="cursor-pointer -mx-6 px-6"
+          style={{ backgroundColor: theme.background.errorLine }}
+          onClick={() => onColorClick("background", "errorLine", theme.background.errorLine)}
+        >
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.keyword }}
-            onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "keyword", theme.semantic.keyword);
+            }}
           >
             throw
           </span>{" "}
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.keyword }}
-            onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "keyword", theme.semantic.keyword);
+            }}
           >
             new
           </span>{" "}
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.error }}
-            onClick={() =>
-              onColorClick("semantic", "error", theme.semantic.error)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "error", theme.semantic.error);
+            }}
           >
             Error
           </span>
           <span style={{ color: theme.foreground.primary }}>(</span>
           <span
-            className="cursor-pointer hover:underline"
+            className="hover:underline"
             style={{ color: theme.semantic.string }}
-            onClick={() =>
-              onColorClick("semantic", "string", theme.semantic.string)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onColorClick("semantic", "string", theme.semantic.string);
+            }}
           >
             "Not implemented"
           </span>
@@ -830,12 +855,19 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         {plain(".")}{method("ToList")}{plain("();")}
       </div>
 
-      {/* Throw with string interpolation */}
-      <div className="mt-4" style={{ paddingLeft: "2rem" }}>
+      {/* Throw with string interpolation - error line highlight */}
+      <div
+        className="mt-4 cursor-pointer -mx-6 px-6"
+        style={{ backgroundColor: theme.background.errorLine, paddingLeft: "calc(2rem + 1.5rem)" }}
+        onClick={() => onColorClick("background", "errorLine", theme.background.errorLine)}
+      >
         {kw("throw")} {kw("new")} <span
-          className="cursor-pointer hover:underline"
+          className="hover:underline"
           style={{ color: theme.semantic.error }}
-          onClick={() => onColorClick("semantic", "error", theme.semantic.error)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onColorClick("semantic", "error", theme.semantic.error);
+          }}
         >InvalidOperationException</span>{plain("(")}{str("$\"User ")}{plain("{id}")}{str(" not found\"")}{plain(");")}
       </div>
 
