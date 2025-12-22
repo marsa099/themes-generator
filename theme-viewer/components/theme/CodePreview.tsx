@@ -75,9 +75,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
           <span style={{ color: theme.foreground.primary }}>: </span>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.type }}
+            style={{ color: theme.semantic.class || theme.semantic.type }}
             onClick={() =>
-              onColorClick("semantic", "type", theme.semantic.type)
+              onColorClick("semantic", "class", theme.semantic.class || theme.semantic.type)
             }
           >
             Item
@@ -99,9 +99,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
           <span style={{ color: theme.foreground.primary }}>: </span>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.type }}
+            style={{ color: theme.semantic.keyword }}
             onClick={() =>
-              onColorClick("semantic", "type", theme.semantic.type)
+              onColorClick("semantic", "keyword", theme.semantic.keyword)
             }
           >
             number
@@ -179,9 +179,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
         <div style={{ paddingLeft: "1rem" }}>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.keyword }}
+            style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
             onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
+              onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword)
             }
           >
             for
@@ -213,9 +213,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
         <div style={{ paddingLeft: "2rem" }}>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.keyword }}
+            style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
             onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
+              onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword)
             }
           >
             if
@@ -284,14 +284,20 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
         <div style={{ paddingLeft: "1rem" }}>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.keyword }}
+            style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
             onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
+              onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword)
             }
           >
             return
           </span>{" "}
-          <span style={{ color: theme.foreground.primary }}>total</span>
+          <span
+            className="cursor-pointer hover:underline"
+            style={{ color: theme.semantic.variable || theme.foreground.primary }}
+            onClick={() =>
+              onColorClick("semantic", "variable", theme.semantic.variable || theme.foreground.primary)
+            }
+          >total</span>
           <span style={{ color: theme.foreground.primary }}>;</span>
         </div>
 
@@ -353,10 +359,10 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
         >
           <span
             className="hover:underline"
-            style={{ color: theme.semantic.keyword }}
+            style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
             onClick={(e) => {
               e.stopPropagation();
-              onColorClick("semantic", "keyword", theme.semantic.keyword);
+              onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword);
             }}
           >
             throw
@@ -433,9 +439,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
           <span style={{ color: theme.foreground.primary }}>{"{"} </span>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.type }}
+            style={{ color: theme.semantic.class || theme.semantic.type }}
             onClick={() =>
-              onColorClick("semantic", "type", theme.semantic.type)
+              onColorClick("semantic", "class", theme.semantic.class || theme.semantic.type)
             }
           >
             Component
@@ -507,9 +513,9 @@ function TypeScriptPreview({ theme, onColorClick }: PreviewProps) {
         <div style={{ paddingLeft: "1rem" }}>
           <span
             className="cursor-pointer hover:underline"
-            style={{ color: theme.semantic.keyword }}
+            style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
             onClick={() =>
-              onColorClick("semantic", "keyword", theme.semantic.keyword)
+              onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword)
             }
           >
             return
@@ -628,6 +634,17 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
     </span>
   );
 
+  // Control flow keywords (return, throw, if, else, etc.)
+  const cf = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.controlFlow || theme.semantic.keyword }}
+      onClick={() => onColorClick("semantic", "controlFlow", theme.semantic.controlFlow || theme.semantic.keyword)}
+    >
+      {text}
+    </span>
+  );
+
   const ty = (text: string) => (
     <span
       className="cursor-pointer hover:underline"
@@ -714,6 +731,39 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
     </span>
   );
 
+  // Variables (local variables, fields)
+  const variable = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.variable || theme.foreground.primary }}
+      onClick={() => onColorClick("semantic", "variable", theme.semantic.variable || theme.foreground.primary)}
+    >
+      {text}
+    </span>
+  );
+
+  // Parameters
+  const param = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.parameter || theme.semantic.variable || theme.foreground.primary }}
+      onClick={() => onColorClick("semantic", "parameter", theme.semantic.parameter || theme.semantic.variable || theme.foreground.primary)}
+    >
+      {text}
+    </span>
+  );
+
+  // Properties/members
+  const prop = (text: string) => (
+    <span
+      className="cursor-pointer hover:underline"
+      style={{ color: theme.semantic.property || theme.foreground.primary }}
+      onClick={() => onColorClick("semantic", "property", theme.semantic.property || theme.foreground.primary)}
+    >
+      {text}
+    </span>
+  );
+
   const plain = (text: string) => (
     <span style={{ color: theme.foreground.primary }}>{text}</span>
   );
@@ -769,7 +819,7 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* Private field */}
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("private")} {kw("readonly")} {iface("IUserService")} {plain("_service;")}
+        {kw("private")} {kw("readonly")} {iface("IUserService")} {variable("_service")}{plain(";")}
       </div>
 
       {/* Empty line */}
@@ -777,11 +827,11 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* Constructor */}
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("public")} {fn("UserController")}{plain("(")}{iface("IUserService")} {plain("service)")}
+        {kw("public")} {fn("UserController")}{plain("(")}{iface("IUserService")} {param("service")}{plain(")")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
       <div style={{ paddingLeft: "6rem" }}>
-        {plain("_service")} {op("=")} {plain("service;")}
+        {variable("_service")} {op("=")} {param("service")}{plain(";")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>{plain("}")}</div>
 
@@ -798,25 +848,25 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         {plain("[")}{attr("HttpGet")}{plain("(")}{str("\"organizations/{orgId}/departments/{deptId}/users/{userId}\"")}{plain(")]")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>
-        {kw("public")} {kw("async")} {ty("Task")}{plain("<")}{ty("ActionResult")}{plain("<")}{cls("User")}{plain("?>>")}{" "}
-        {fn("GetById")}{plain("(")}{ty("int")} {plain("userId)")}
+        {kw("public")} {kw("async")} {cls("Task")}{plain("<")}{cls("ActionResult")}{plain("<")}{cls("User")}{plain("?>>")}{" "}
+        {fn("GetById")}{plain("(")}{kw("int")} {param("userId")}{plain(")")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>{plain("{")}</div>
 
       {/* Method body */}
       <div style={{ paddingLeft: "6rem" }}>
-        {kw("var")} {plain("user")} {op("=")} {kw("await")} {plain("_service.")}{method("FindAsync")}{plain("(userId);")}
+        {kw("var")} {variable("user")} {op("=")} {kw("await")} {variable("_service")}{plain(".")}{method("FindAsync")}{plain("(")}{param("userId")}{plain(");")}
       </div>
       <div style={{ paddingLeft: "6rem" }}>
-        {kw("if")} {plain("(user")} {kw("is")} {kw("null")}{plain(")")}
+        {cf("if")} {plain("(")}{variable("user")} {kw("is")} {kw("null")}{plain(")")}
       </div>
       <div style={{ paddingLeft: "6rem" }}>{plain("{")}</div>
       <div style={{ paddingLeft: "8rem" }}>
-        {kw("return")} {method("NotFound")}{plain("(")}{str("$\"User ")}{plain("{userId}")}{str(" was not found\"")}{plain(");")}
+        {cf("return")} {method("NotFound")}{plain("(")}{str("$\"User ")}{plain("{")}{param("userId")}{plain("}")}{str(" was not found\"")}{plain(");")}
       </div>
       <div style={{ paddingLeft: "6rem" }}>{plain("}")}</div>
       <div style={{ paddingLeft: "6rem" }}>
-        {kw("return")} {method("Ok")}{plain("(user);")}
+        {cf("return")} {method("Ok")}{plain("(")}{variable("user")}{plain(");")}
       </div>
 
       <div style={{ paddingLeft: "4rem" }}>{plain("}")}</div>
@@ -829,7 +879,7 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* Record */}
       <div style={{ paddingLeft: "2rem" }}>
-        {kw("public")} {kw("record")} {cls("User")}{plain("(")}{ty("int")} {plain("Id,")} {ty("string")}{plain("?")} {plain("Name,")} {ty("bool")} {plain("IsActive);")}
+        {kw("public")} {kw("record")} {cls("User")}{plain("(")}{kw("int")} {prop("Id")}{plain(",")} {kw("string")}{plain("?")} {prop("Name")}{plain(",")} {kw("bool")} {prop("IsActive")}{plain(");")}
       </div>
 
       {/* Separator */}
@@ -839,17 +889,13 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
 
       {/* LINQ */}
       <div style={{ paddingLeft: "2rem" }}>
-        {kw("var")} {plain("activeUsers")} {op("=")} {plain("users")}
+        {kw("var")} {variable("activeUsers")} {op("=")} {variable("users")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>
-        {plain(".")}{method("Where")}{plain("(u")} {op("=>")} {plain("u.")}<span
-          className="cursor-pointer hover:underline"
-          style={{ color: theme.semantic.boolean }}
-          onClick={() => onColorClick("semantic", "boolean", theme.semantic.boolean)}
-        >IsActive</span>{plain(")")}
+        {plain(".")}{method("Where")}{plain("(")}{param("u")} {op("=>")} {param("u")}{plain(".")}{prop("IsActive")}{plain(")")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>
-        {plain(".")}{method("OrderBy")}{plain("(u")} {op("=>")} {plain("u.Name)")}
+        {plain(".")}{method("OrderBy")}{plain("(")}{param("u")} {op("=>")} {param("u")}{plain(".")}{prop("Name")}{plain(")")}
       </div>
       <div style={{ paddingLeft: "4rem" }}>
         {plain(".")}{method("ToList")}{plain("();")}
@@ -861,14 +907,14 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         style={{ backgroundColor: theme.background.errorLine, paddingLeft: "calc(2rem + 1.5rem)" }}
         onClick={() => onColorClick("background", "errorLine", theme.background.errorLine)}
       >
-        {kw("throw")} {kw("new")} <span
+        {cf("throw")} {kw("new")} <span
           className="hover:underline"
           style={{ color: theme.semantic.error }}
           onClick={(e) => {
             e.stopPropagation();
             onColorClick("semantic", "error", theme.semantic.error);
           }}
-        >InvalidOperationException</span>{plain("(")}{str("$\"User ")}{plain("{id}")}{str(" not found\"")}{plain(");")}
+        >InvalidOperationException</span>{plain("(")}{str("$\"User ")}{plain("{")}{variable("id")}{plain("}")}{str(" not found\"")}{plain(");")}
       </div>
 
       <div>{plain("}")}</div>
