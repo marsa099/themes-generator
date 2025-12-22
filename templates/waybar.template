@@ -176,11 +176,19 @@ window#waybar {
   color: {{accent.red}};
 }
 
-#pulseaudio {
+#pulseaudio.speaker {
   color: {{accent.blue}};
 }
 
-#pulseaudio.muted {
+#pulseaudio.speaker.muted {
+  color: {{accent.cyan}};
+}
+
+#pulseaudio.mic {
+  color: {{accent.blue}};
+}
+
+#pulseaudio.mic.source-muted {
   color: {{accent.cyan}};
 }
 
