@@ -201,12 +201,20 @@ window#waybar {
   color: {{accent.red}};
 }
 
-#pulseaudio {
-  color: {{foreground.primary}};
+#pulseaudio.speaker {
+  color: {{accent.blue}};
 }
 
-#pulseaudio.muted {
-  color: {{foreground.primary}};
+#pulseaudio.speaker.muted {
+  color: {{accent.cyan}};
+}
+
+#pulseaudio.mic {
+  color: {{accent.blue}};
+}
+
+#pulseaudio.mic.source-muted {
+  color: {{accent.cyan}};
 }
 
 #custom-dnd {
