@@ -58,6 +58,8 @@ local c = {
   method = "{{dark.semantic.method}}",
   tag = "{{dark.semantic.tag}}",
   attribute = "{{dark.semantic.attribute}}",
+  controlFlow = "{{dark.semantic.controlFlow}}",
+  parameter = "{{dark.semantic.parameter}}",
 
   -- Highlights
   highlight_low = "{{dark.semantic.highlight_low}}",
@@ -149,9 +151,9 @@ hl("Type", { fg = c.type })
 
 hl("Boolean", { fg = c.boolean })
 hl("Character", { link = "String" })
-hl("Conditional", { link = "Statement" })
+hl("Conditional", { fg = c.controlFlow })
 hl("Define", { link = "PreProc" })
-hl("Exception", { link = "Statement" })
+hl("Exception", { fg = c.controlFlow })
 hl("Float", { link = "Number" })
 hl("Identifier", { fg = c.fg })
 hl("Include", { link = "PreProc" })
@@ -159,7 +161,7 @@ hl("Label", { link = "Conditional" })
 hl("Macro", { link = "PreProc" })
 hl("PreCondit", { link = "PreProc" })
 hl("PreProc", { fg = c.fg })
-hl("Repeat", { link = "Conditional" })
+hl("Repeat", { fg = c.controlFlow })
 hl("Special", { fg = c.fg })
 hl("Statement", { link = "Keyword" })
 hl("StorageClass", { link = "Type" })
@@ -317,8 +319,8 @@ hl("LspCodeLens", { fg = c.fg_muted })
 hl("LspSignatureActiveParameter", { sp = c.fg, underline = true })
 
 -- Semantic Tokens - explicitly link to themed groups
-hl("@lsp.type.variable", { link = "Identifier" })
-hl("@lsp.type.parameter", { link = "Identifier" })
+hl("@lsp.type.variable", { fg = c.variable })
+hl("@lsp.type.parameter", { fg = c.parameter })
 hl("@lsp.type.property", { link = "@property" })
 hl("@lsp.type.function", { link = "Function" })
 hl("@lsp.type.method", { link = "Function" })

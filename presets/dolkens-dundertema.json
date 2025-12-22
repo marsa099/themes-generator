@@ -4,6 +4,7 @@
   "semantic": {
     "keyword": "accent.green",
     "operator": "accent.yellow",
+    "controlFlow": "accent.purple",
     "comment": "foreground.muted",
     "string": "accent.blue",
     "function": "accent.blue",
@@ -15,6 +16,7 @@
     "number": "accent.red",
     "boolean": "accent.purple",
     "variable": "foreground.primary",
+    "parameter": "foreground.secondary",
     "property": "accent.cyan",
     "method": "accent.orange",
     "tag": "accent.blue",
