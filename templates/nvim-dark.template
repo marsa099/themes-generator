@@ -308,10 +308,10 @@ end
 hl("DiagnosticUnnecessary", { fg = c.comment, undercurl = true })
 
 -- Diagnostic line backgrounds (highlight entire line with error/warning)
-hl("DiagnosticLineError", { bg = "#2d1f1f" })
-hl("DiagnosticLineWarn", { bg = "#2d2a1f" })
-hl("DiagnosticLineInfo", { bg = "#1f252d" })
-hl("DiagnosticLineHint", { bg = "#1f2d2a" })
+hl("DiagnosticLineError", { bg = "{{dark.background.errorLine}}" })
+hl("DiagnosticLineWarn", { bg = "{{dark.background.warningLine}}" })
+hl("DiagnosticLineInfo", { bg = "{{dark.background.infoLine}}" })
+hl("DiagnosticLineHint", { bg = "{{dark.background.hintLine}}" })
 
 hl("LspCodeLens", { fg = c.fg_muted })
 hl("LspSignatureActiveParameter", { sp = c.fg, underline = true })

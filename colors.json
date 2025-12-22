@@ -12,6 +12,10 @@
         "secondary": "#1B1B1B",
         "tertiary": "#1B1B1B",
         "selection": "#282F38",
+        "errorLine": "#2d1f1f",
+        "warningLine": "#2d2a1f",
+        "infoLine": "#1f252d",
+        "hintLine": "#1f2d2a",
         "surface": "#1B1B1B",
         "overlay": "#292826",
         "prompt": "#323A40"
@@ -85,6 +89,10 @@
         "secondary": "#F9F2DF",
         "tertiary": "#FDF6E3",
         "selection": "#f4eeee",
+        "errorLine": "#fde8e8",
+        "warningLine": "#fef3cd",
+        "infoLine": "#e8f4fd",
+        "hintLine": "#e8fdf0",
         "surface": "#F9F2DF",
         "overlay": "#EBE4D6",
         "prompt": "#E8EAED"
