@@ -60,6 +60,7 @@ local c = {
   attribute = "{{light.semantic.attribute}}",
   controlFlow = "{{light.semantic.controlFlow}}",
   parameter = "{{light.semantic.parameter}}",
+  constant = "{{light.semantic.constant}}",
 
   -- Highlights
   highlight_low = "{{light.semantic.highlight_low}}",
@@ -141,7 +142,7 @@ hl("WinBarNC", { link = "WinBar" })
 
 -- ************** SYNTAX **************
 hl("Comment", { fg = c.comment, italic = true })
-hl("Constant", { fg = c.purple })
+hl("Constant", { fg = c.constant })
 hl("Function", { fg = c["function"] })
 hl("Keyword", { fg = c.keyword })
 hl("Number", { fg = c.number })
@@ -163,7 +164,7 @@ hl("PreCondit", { link = "PreProc" })
 hl("PreProc", { fg = c.fg })
 hl("Repeat", { fg = c.controlFlow })
 hl("Special", { fg = c.fg })
-hl("Statement", { link = "Keyword" })
+hl("Statement", { fg = c.controlFlow })
 hl("StorageClass", { link = "Type" })
 hl("Structure", { link = "Type" })
 hl("Tag", { fg = c.fg })
@@ -234,6 +235,20 @@ hl("@text.literal", { fg = c.fg })
 hl("@text.reference", { link = "String" })
 hl("@text.uri", { fg = c.blue, underline = true })
 hl("@type.builtin", { link = "@type" })
+
+-- Variables
+hl("@variable", { fg = c.variable })
+hl("@variable.parameter", { fg = c.parameter })
+hl("@variable.member", { fg = c.property })
+
+-- Constants
+hl("@constant", { fg = c.constant })
+
+-- Control flow keywords
+hl("@keyword.return", { fg = c.controlFlow })
+hl("@keyword.exception", { fg = c.controlFlow })
+hl("@keyword.conditional", { fg = c.controlFlow })
+hl("@keyword.repeat", { fg = c.controlFlow })
 
 -- JSX/TSX (Legacy treesitter)
 hl("@tag", { fg = c.tag })
@@ -335,7 +350,7 @@ hl("@lsp.type.interface", { fg = c.interface })
 hl("@lsp.type.struct", { fg = c.struct })
 hl("@lsp.type.namespace", { link = "@namespace" })
 hl("@lsp.type.enum", { fg = c.enum })
-hl("@lsp.type.enumMember", { link = "Constant" })
+hl("@lsp.type.enumMember", { fg = c.constant })
 hl("@lsp.mod.readonly", {})
 hl("@lsp.mod.defaultLibrary", {})
 hl("@lsp.typemod.variable.readonly", { link = "Identifier" })
