@@ -1,0 +1,23 @@
+{
+  "name": "Visual Studio Dark",
+  "description": "Syntax colors matching Visual Studio's C# dark theme",
+  "semantic": {
+    "keyword": "#569CD6",
+    "operator": "#C586C0",
+    "comment": "#6A9955",
+    "string": "#CE9178",
+    "function": "#DCDCAA",
+    "type": "#4EC9B0",
+    "class": "#4EC9B0",
+    "interface": "#B8D7A3",
+    "struct": "#86C691",
+    "enum": "#B8D7A3",
+    "number": "#B5CEA8",
+    "boolean": "#569CD6",
+    "variable": "#9CDCFE",
+    "property": "#9CDCFE",
+    "method": "#DCDCAA",
+    "tag": "#569CD6",
+    "attribute": "#9CDCFE"
+  }
+}
