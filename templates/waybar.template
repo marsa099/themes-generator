@@ -184,6 +184,21 @@ window#waybar {
   color: {{accent.cyan}};
 }
 
+#custom-dnd {
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+#custom-dnd.active {
+  color: {{accent.purple}};
+}
+
+#custom-dnd.inactive {
+  color: {{foreground.muted}};
+}
+
 tooltip {
   background: alpha({{background.secondary}}, 0.95);
   border: 1px solid alpha({{accent.cyan}}, 0.2);
