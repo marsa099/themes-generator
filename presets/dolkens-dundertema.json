@@ -1,0 +1,23 @@
+{
+  "name": "Dolkens Dundertema",
+  "description": "Original theme colors using accent references",
+  "semantic": {
+    "keyword": "accent.green",
+    "operator": "accent.yellow",
+    "comment": "foreground.muted",
+    "string": "accent.blue",
+    "function": "accent.blue",
+    "type": "accent.cyan",
+    "class": "accent.cyan",
+    "interface": "accent.green",
+    "struct": "accent.purple",
+    "enum": "accent.blue",
+    "number": "accent.red",
+    "boolean": "accent.purple",
+    "variable": "foreground.primary",
+    "property": "accent.cyan",
+    "method": "accent.orange",
+    "tag": "accent.blue",
+    "attribute": "accent.cyan"
+  }
+}

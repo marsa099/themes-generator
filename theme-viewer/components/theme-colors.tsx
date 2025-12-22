@@ -25,7 +25,9 @@ export function ThemeColors() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
-  const [previewLanguage, setPreviewLanguage] = useState<"typescript" | "csharp">("typescript");
+  const [previewLanguage, setPreviewLanguage] = useState<"typescript" | "csharp">("csharp");
+  const [presets, setPresets] = useState<Array<{ id: string; name: string; description: string }>>([]);
+  const [isApplyingPreset, setIsApplyingPreset] = useState(false);
 
   const loadTheme = async () => {
     try {
@@ -52,9 +54,43 @@ export function ThemeColors() {
     }
   };
 
+  const loadPresets = async () => {
+    try {
+      const response = await fetch("/api/presets");
+      if (response.ok) {
+        const data = await response.json();
+        setPresets(data);
+      }
+    } catch (err) {
+      console.error("Failed to load presets:", err);
+    }
+  };
+
+  const applyPreset = async (presetId: string) => {
+    setIsApplyingPreset(true);
+    try {
+      const response = await fetch("/api/presets/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ presetId, mode: currentMode }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to apply preset");
+      }
+
+      await loadTheme();
+    } catch (err) {
+      console.error("Failed to apply preset:", err);
+    } finally {
+      setIsApplyingPreset(false);
+    }
+  };
+
   useEffect(() => {
     const initializeTheme = async () => {
       await loadTheme();
+      await loadPresets();
       const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       setCurrentMode(isDark ? "dark" : "light");
     };
@@ -307,6 +343,36 @@ export function ThemeColors() {
           selectedAccent={selectedAccent}
           getSemanticColorsUsingAccent={getSemanticColorsUsingAccent}
         />
+
+        {presets.length > 0 && (
+          <div
+            className="rounded-2xl shadow-xl overflow-hidden mb-12 p-6"
+            style={{
+              backgroundColor: theme.background.primary,
+              boxShadow: `0 20px 25px -5px ${theme.background.overlay}20, 0 10px 10px -5px ${theme.background.overlay}10`,
+            }}
+          >
+            <h3 className="text-lg font-semibold mb-4">Color Presets</h3>
+            <div className="flex flex-wrap gap-3">
+              {presets.map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() => applyPreset(preset.id)}
+                  disabled={isApplyingPreset}
+                  className="px-4 py-2 rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: theme.background.overlay,
+                    color: theme.foreground.primary,
+                    opacity: isApplyingPreset ? 0.5 : 1,
+                  }}
+                  title={preset.description}
+                >
+                  {isApplyingPreset ? "Applying..." : preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <SaveChanges
           hasChanges={hasChanges}
