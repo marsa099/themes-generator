@@ -901,20 +901,9 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         {plain(".")}{method("ToList")}{plain("();")}
       </div>
 
-      {/* Throw with string interpolation - error line highlight */}
-      <div
-        className="mt-4 cursor-pointer -mx-6 px-6"
-        style={{ backgroundColor: theme.background.errorLine, paddingLeft: "calc(2rem + 1.5rem)" }}
-        onClick={() => onColorClick("background", "errorLine", theme.background.errorLine)}
-      >
-        {cf("throw")} {kw("new")} <span
-          className="hover:underline"
-          style={{ color: theme.semantic.error }}
-          onClick={(e) => {
-            e.stopPropagation();
-            onColorClick("semantic", "error", theme.semantic.error);
-          }}
-        >InvalidOperationException</span>{plain("(")}{str("$\"User ")}{plain("{")}{variable("id")}{plain("}")}{str(" not found\"")}{plain(");")}
+      {/* Throw with string interpolation */}
+      <div className="mt-4" style={{ paddingLeft: "2rem" }}>
+        {cf("throw")} {kw("new")} {cls("InvalidOperationException")}{plain("(")}{str("$\"User ")}{plain("{")}{variable("id")}{plain("}")}{str(" not found\"")}{plain(");")}
       </div>
 
       <div>{plain("}")}</div>
