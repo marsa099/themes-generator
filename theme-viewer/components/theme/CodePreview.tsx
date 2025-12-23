@@ -906,6 +906,23 @@ function CSharpPreview({ theme, onColorClick }: PreviewProps) {
         {cf("throw")} {kw("new")} {cls("InvalidOperationException")}{plain("(")}{str("$\"User ")}{plain("{")}{variable("id")}{plain("}")}{str(" not found\"")}{plain(");")}
       </div>
 
+      {/* Error line - undefined variable */}
+      <div
+        className="cursor-pointer -mx-6 px-6"
+        style={{ backgroundColor: theme.background.errorLine, paddingLeft: "calc(2rem + 1.5rem)" }}
+        onClick={() => onColorClick("background", "errorLine", theme.background.errorLine)}
+      >
+        {kw("var")} {variable("result")} {op("=")} <span
+          className="hover:underline"
+          style={{ color: theme.semantic.error, textDecoration: "underline wavy" }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onColorClick("semantic", "error", theme.semantic.error);
+          }}
+        >undefinedVariable</span>{plain(";")}
+        <span className="ml-4" style={{ color: theme.semantic.comment, fontStyle: "italic" }}>{comment("// CS0103: name does not exist")}</span>
+      </div>
+
       <div>{plain("}")}</div>
     </div>
   );
