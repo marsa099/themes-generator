@@ -43,7 +43,7 @@
         "info": "accent.blue",
         "keyword": "#569CD6",
         "command": "accent.blue",
-        "operator": "foreground.primary",
+        "operator": "#D4D4D4",
         "controlFlow": "#C586C0",
         "comment": "#6A9955",
         "string": "#CE9178",
