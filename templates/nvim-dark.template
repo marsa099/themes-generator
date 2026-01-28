@@ -70,6 +70,12 @@ local c = {
   highlight_warn = "{{dark.semantic.highlight_warn}}",
   highlight_err = "{{dark.semantic.highlight_err}}",
 
+  -- Diff backgrounds
+  diff_add_bg = "{{dark.semantic.diff_add_bg}}",
+  diff_delete_bg = "{{dark.semantic.diff_delete_bg}}",
+  diff_change_bg = "{{dark.semantic.diff_change_bg}}",
+  diff_text_bg = "{{dark.semantic.diff_text_bg}}",
+
   -- Special
   cursor = "{{dark.semantic.cursor}}",
   none = "NONE",
@@ -89,9 +95,9 @@ hl("FloatTitle", { fg = c.blue, bg = c.bg_surface })
 hl("WinSeparator", { fg = c.bg_secondary })
 
 -- Diff
-hl("Added", { fg = c.green, bg = c.highlight_succ })
-hl("Changed", { fg = c.yellow, bg = c.highlight_warn })
-hl("Removed", { fg = c.red, bg = c.highlight_err })
+hl("Added", { fg = c.green, bg = c.diff_add_bg })
+hl("Changed", { fg = c.yellow, bg = c.diff_change_bg })
+hl("Removed", { fg = c.red, bg = c.diff_delete_bg })
 
 -- Elements
 hl("ColorColumn", {})
@@ -178,7 +184,7 @@ hl("Typedef", { link = "Type" })
 hl("DiffAdd", { link = "Added" })
 hl("DiffChange", { link = "Changed" })
 hl("DiffDelete", { link = "Removed" })
-hl("DiffText", { fg = c.yellow, bg = c.highlight_warn, bold = true })
+hl("DiffText", { bg = c.diff_text_bg })
 
 -- Gitcommit diffs
 hl("diffAdded", { link = "Added" })
@@ -416,9 +422,9 @@ hl("GitSignsStagedTopdelete", { link = "GitSignsStagedDelete" })
 hl("GitSignsStagedUntracked", { link = "GitSignsStagedAdd" })
 hl("GitSignsCurrentLineBlame", { link = "NonText" })
 hl("GitSignsAddInline", { link = "Added" })
-hl("GitSignsAddLnInline", { fg = c.fg, bg = c.highlight_low })
+hl("GitSignsAddLnInline", { fg = c.fg, bg = c.diff_add_bg })
 hl("GitSignsDeleteInline", { link = "Removed" })
-hl("GitSignsDeleteLnInline", { fg = c.fg, bg = c.highlight_low })
+hl("GitSignsDeleteLnInline", { fg = c.fg, bg = c.diff_delete_bg })
 hl("GitSignsChangeInline", { link = "DiffText" })
 hl("GitSignsChangeLnInline", { link = "Changed" })
 hl("GitSignsDeleteVirtLn", { link = "Removed" })
