@@ -191,11 +191,13 @@ apply_tool_theme() {
             ;;
         "tmux")
             if command -v tmux &> /dev/null; then
+                mkdir -p "$HOME/.config/tmux"
+                cp "$generated_file" "$HOME/.config/tmux/theme.conf"
                 if tmux list-sessions &> /dev/null; then
-                    tmux source-file "$generated_file"
-                    log_success "Applied Tmux theme"
+                    tmux source-file "$HOME/.config/tmux/theme.conf"
+                    log_success "Applied and reloaded Tmux theme"
                 else
-                    log_success "Tmux theme generated (will apply on next start)"
+                    log_success "Applied Tmux theme (will load on next start)"
                 fi
             fi
             ;;
