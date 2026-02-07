@@ -1,0 +1,35 @@
+# Tmux theme
+# Generated from centralized theme system
+
+# Status bar
+set -g status-style "bg={{background.secondary}},fg={{foreground.primary}}"
+
+# Status left: session name (green, red on prefix)
+set -g status-left "#[fg={{accent.green}},bold]#{?client_prefix,#[fg={{accent.red}}],} #S "
+set -g status-right "#[fg={{accent.blue}}]%H:%M"
+
+# Window tabs
+set -g window-status-style "fg={{foreground.muted}}"
+set -g window-status-format " #I:#W "
+set -g window-status-current-style "fg={{accent.blue}},bold"
+set -g window-status-current-format " #I:#W "
+set -g window-status-activity-style "fg={{accent.gold}},none"
+set -g window-status-separator ""
+
+# Pane borders
+set -g pane-border-style "fg={{foreground.muted}}"
+set -g pane-active-border-style "fg={{accent.blue}}"
+
+# Messages
+set -g message-style "fg={{accent.cyan}},bg={{background.overlay}}"
+set -g message-command-style "fg={{accent.cyan}},bg={{background.overlay}}"
+
+# Copy mode
+set -g mode-style "bg={{background.selection}},bold"
+
+# Clock
+set -g clock-mode-colour "{{accent.blue}}"
+
+# Popups (tmux 3.4+)
+set -gq popup-style "bg={{background.primary}}"
+set -gq popup-border-style "fg={{foreground.muted}}"
