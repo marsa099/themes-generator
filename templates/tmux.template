@@ -13,7 +13,7 @@ set -g window-status-style "fg={{foreground.muted}}"
 set -g window-status-format " #I:#W "
 set -g window-status-current-style "fg={{accent.blue}},bold"
 set -g window-status-current-format " #I:#W "
-set -g window-status-activity-style "fg={{accent.gold}},none"
+set -g window-status-activity-style "fg={{accent.yellow}},none"
 set -g window-status-separator ""
 
 # Pane borders

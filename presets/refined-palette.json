@@ -1,0 +1,46 @@
+{
+  "name": "Refined Palette",
+  "description": "7 carefully chosen colors at moderate saturation, each clearly distinct but from a curated, cohesive palette",
+  "accent": {
+    "dark": {
+      "teal": "#6BAFA7",
+      "gold": "#D4A373",
+      "sage": "#A3B18A",
+      "slate": "#88A4C0",
+      "lavender": "#A690B8",
+      "rose": "#CC8B8B",
+      "stone": "#B8AFA0"
+    },
+    "light": {
+      "teal": "#3D8A82",
+      "gold": "#A07845",
+      "sage": "#6B8254",
+      "slate": "#5A7A96",
+      "lavender": "#7A6290",
+      "rose": "#A06060",
+      "stone": "#8A7E70"
+    }
+  },
+  "semantic": {
+    "keyword": "accent.teal",
+    "operator": "accent.stone",
+    "controlFlow": "accent.lavender",
+    "comment": "foreground.muted",
+    "string": "accent.sage",
+    "function": "accent.gold",
+    "type": "accent.slate",
+    "class": "accent.slate",
+    "interface": "accent.teal",
+    "struct": "accent.lavender",
+    "enum": "accent.slate",
+    "number": "accent.rose",
+    "boolean": "accent.lavender",
+    "variable": "foreground.primary",
+    "parameter": "foreground.secondary",
+    "property": "accent.slate",
+    "method": "accent.gold",
+    "tag": "accent.teal",
+    "attribute": "accent.slate",
+    "constant": "accent.rose"
+  }
+}
