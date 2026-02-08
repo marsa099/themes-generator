@@ -428,6 +428,60 @@ status() {
     done
 }
 
+# Apply a preset
+apply_preset() {
+    local preset_name=$1
+
+    if [[ -z "$preset_name" ]]; then
+        log_info "Available presets:"
+        for preset_file in "$SCRIPT_DIR/presets"/*.json; do
+            if [[ -f "$preset_file" ]]; then
+                local name=$(jq -r '.name' "$preset_file")
+                local id=$(basename "$preset_file" .json)
+                echo "  $id - $name"
+            fi
+        done
+        return 0
+    fi
+
+    local preset_file="$SCRIPT_DIR/presets/${preset_name}.json"
+    if [[ ! -f "$preset_file" ]]; then
+        log_error "Preset not found: $preset_name"
+        log_info "Available presets:"
+        for f in "$SCRIPT_DIR/presets"/*.json; do
+            [[ -f "$f" ]] && echo "  $(basename "$f" .json)"
+        done
+        return 1
+    fi
+
+    local preset_display_name=$(jq -r '.name' "$preset_file")
+    log_info "Applying preset: $preset_display_name"
+
+    for mode in dark light; do
+        if jq -e ".themes.${mode}" "$COLORS_FILE" &> /dev/null; then
+            local tmp=$(mktemp)
+            # Merge accent colors if preset has mode-specific accents
+            if jq -e ".accent.${mode}" "$preset_file" &> /dev/null; then
+                jq --slurpfile preset "$preset_file" \
+                    ".themes.${mode}.accent += \$preset[0].accent.${mode} | .themes.${mode}.semantic += \$preset[0].semantic" \
+                    "$COLORS_FILE" > "$tmp" && mv "$tmp" "$COLORS_FILE"
+            # Merge flat accent colors (non-mode-specific, e.g. visual-studio)
+            elif jq -e ".accent" "$preset_file" &> /dev/null; then
+                jq --slurpfile preset "$preset_file" \
+                    ".themes.${mode}.accent += \$preset[0].accent | .themes.${mode}.semantic += \$preset[0].semantic" \
+                    "$COLORS_FILE" > "$tmp" && mv "$tmp" "$COLORS_FILE"
+            else
+                jq --slurpfile preset "$preset_file" \
+                    ".themes.${mode}.semantic += \$preset[0].semantic" \
+                    "$COLORS_FILE" > "$tmp" && mv "$tmp" "$COLORS_FILE"
+            fi
+        fi
+    done
+
+    log_success "Applied preset '$preset_display_name'"
+    log_info "Run '$0 switch dark' to regenerate and apply themes"
+}
+
 # Show help
 show_help() {
     cat << EOF
@@ -441,6 +495,7 @@ Commands:
     switch [MODE]       Switch to specified theme mode (dark/light)
     toggle              Toggle between light and dark themes
     auto                Auto-detect and apply system theme
+    preset [NAME]       Apply a preset (or list available presets)
     status              Show current theme status
     help                Show this help message
 
@@ -476,6 +531,9 @@ main() {
             ;;
         "auto")
             auto_theme
+            ;;
+        "preset")
+            apply_preset "$2"
             ;;
         "status")
             status
