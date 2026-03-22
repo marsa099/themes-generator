@@ -1,0 +1,17 @@
+[colors]
+background={{background.primary}}ff
+text={{foreground.primary}}ff
+message={{foreground.secondary}}ff
+prompt={{accent.teal}}ff
+placeholder={{foreground.muted}}ff
+input={{foreground.primary}}ff
+match={{accent.gold}}ff
+selection={{background.selection}}ff
+selection-text={{foreground.primary}}ff
+selection-match={{accent.gold}}ff
+counter={{foreground.muted}}ff
+border={{foreground.muted}}ff
+
+[border]
+width=2
+radius=10

@@ -400,6 +400,13 @@ PYEOF
                 fi
             fi
             ;;
+        "fuzzel")
+            if command -v fuzzel &> /dev/null; then
+                mkdir -p "$HOME/.config/fuzzel"
+                cp "$generated_file" "$HOME/.config/fuzzel/fuzzel.ini"
+                log_success "Applied fuzzel theme"
+            fi
+            ;;
         "pi")
             local pi_dir="$HOME/.pi/agent/themes"
             mkdir -p "$pi_dir"
