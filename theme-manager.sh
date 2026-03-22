@@ -290,6 +290,13 @@ apply_tool_theme() {
                 fi
             fi
             ;;
+        "fuzzel")
+            if command -v fuzzel &> /dev/null; then
+                mkdir -p "$HOME/.config/fuzzel"
+                cp "$generated_file" "$HOME/.config/fuzzel/fuzzel.ini"
+                log_success "Applied fuzzel theme"
+            fi
+            ;;
         *)
             log_warning "Unknown tool: $tool"
             return 1
