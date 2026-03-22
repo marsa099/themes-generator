@@ -425,9 +425,10 @@ vim colors.json
 - **Python 3** - For template processing
 - **jq** - For JSON parsing in shell script
 - **Bash** - For the theme manager script
+- **gsettings** (part of `glib`) - For setting the system-wide dark/light preference. Apps like Ghostty and Firefox listen to this to switch between their light and dark themes. On NixOS, install via `glib` in `environment.systemPackages`.
 
 **Optional** (theme-manager.sh gracefully skips missing tools):
-- Fish shell, Neovim, Wezterm, Ghostty, Mako, Waybar, Rofi, spotify-player, etc.
+- Fish shell, Neovim, Wezterm, Ghostty, Mako, Waybar, Rofi, Fuzzel, spotify-player, etc.
 
 ## Quick Reference
 
