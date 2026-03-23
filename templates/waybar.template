@@ -144,10 +144,6 @@ window#waybar {
   color: {{accent.blue}};
 }
 
-#network {
-  color: {{accent.green}};
-}
-
 #network.disconnected {
   color: {{accent.red}};
 }
