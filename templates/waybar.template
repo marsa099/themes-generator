@@ -165,10 +165,6 @@ window#waybar {
   color: {{foreground.primary}};
 }
 
-#network {
-  color: {{foreground.primary}};
-}
-
 #network.disconnected {
   color: {{accent.red}};
 }
