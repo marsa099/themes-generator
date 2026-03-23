@@ -121,11 +121,15 @@ window#waybar {
 #bluetooth,
 #custom-language,
 #pulseaudio {
-  padding: 6px 12px;
+  padding: 6px 10px;
   margin: 0;
   background: transparent;
   color: {{foreground.primary}};
   border-radius: 0;
+}
+
+#battery {
+  padding-left: 14px;
 }
 
 #battery.warning {
