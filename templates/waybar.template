@@ -131,7 +131,7 @@ window#waybar {
 #bluetooth,
 #custom-language,
 #pulseaudio {
-  padding: 6px 12px;
+  padding: 6px 10px;
   margin: 0;
   background: transparent;
   color: {{foreground.primary}};
@@ -147,6 +147,10 @@ window#waybar {
 
 #custom-dnd.active {
   font-size: 18px;
+}
+
+#battery {
+  padding-left: 14px;
 }
 
 #battery.warning {
