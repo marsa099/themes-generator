@@ -116,6 +116,35 @@ window#waybar {
   background-image: none;
 }
 
+#custom-dnd.active {
+  padding: 6px 12px;
+  color: {{accent.red}};
+  font-size: 16px;
+}
+
+#custom-dnd.inactive {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+#custom-discord-notifications,
+#custom-teams-notifications {
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  color: #5865F2;
+  border-radius: 0;
+  font-size: 16px;
+}
+
+#custom-discord-notifications.empty,
+#custom-teams-notifications.empty {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
 
 /* Right side container - all items grouped */
 .modules-right {
@@ -136,17 +165,6 @@ window#waybar {
   background: transparent;
   color: {{foreground.primary}};
   border-radius: 0;
-}
-
-/* Hide DND module entirely when not active so it doesn't reserve space */
-#custom-dnd.empty {
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-}
-
-#custom-dnd.active {
-  font-size: 18px;
 }
 
 #battery {
