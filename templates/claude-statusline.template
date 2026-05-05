@@ -1,0 +1,9 @@
+# Claude Code statusline colors
+# Generated from centralized theme system
+# Sourced by ~/.scripts/claude-statusline at runtime.
+
+cs_model_hex="{{semantic.cursor}}"
+cs_path_hex="{{foreground.muted}}"
+cs_leaf_hex="{{foreground.primary}}"
+cs_branch_hex="{{accent.gold}}"
+cs_count_hex="{{accent.yellow}}"

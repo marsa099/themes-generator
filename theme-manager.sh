@@ -407,6 +407,12 @@ PYEOF
                 log_success "Applied fuzzel theme"
             fi
             ;;
+        "claude-statusline")
+            local target_dir="$HOME/.local/state/claude-statusline"
+            mkdir -p "$target_dir"
+            cp "$generated_file" "$target_dir/colors.sh"
+            log_success "Applied claude-statusline theme"
+            ;;
         "pi")
             local pi_dir="$HOME/.pi/agent/themes"
             mkdir -p "$pi_dir"
