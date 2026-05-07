@@ -199,7 +199,9 @@ apply_tool_theme() {
                 cp "$generated_file" "$target_dir/style.css"
                 local label=$([[ "$is_managed" == true ]] && echo "managed" || echo "local")
                 if pgrep waybar > /dev/null; then
-                    killall -SIGUSR2 waybar
+                    pkill waybar
+                    niri msg action spawn -- waybar &
+                    disown 2>/dev/null || true
                     log_success "Applied and reloaded Waybar theme ($label)"
                 else
                     log_success "Applied Waybar theme ($label, not running)"
@@ -407,6 +409,20 @@ PYEOF
                 log_success "Applied fuzzel theme"
             fi
             ;;
+        "ghostty")
+            if [[ -d "$HOME/.config/ghostty" ]] || command -v ghostty &> /dev/null; then
+                mkdir -p "$HOME/.config/ghostty/themes"
+                cp "$generated_file" "$HOME/.config/ghostty/themes/$theme_mode"
+                log_success "Applied Ghostty $theme_mode theme"
+            fi
+            ;;
+        "wezterm")
+            if [[ -d "$HOME/.config/wezterm" ]] || command -v wezterm &> /dev/null; then
+                mkdir -p "$HOME/.config/wezterm/colors"
+                cp "$generated_file" "$HOME/.config/wezterm/colors/${theme_mode}.lua"
+                log_success "Applied Wezterm $theme_mode theme"
+            fi
+            ;;
         "claude-statusline")
             local target_dir="$HOME/.local/state/claude-statusline"
             mkdir -p "$target_dir"
@@ -457,6 +473,8 @@ PYEOF
             local gtk3_dir="$HOME/.config/gtk-3.0"
             local gtk4_dir="$HOME/.config/gtk-4.0"
             mkdir -p "$gtk3_dir" "$gtk4_dir"
+            # Remove existing gtk.css (may be a dangling symlink to another theme)
+            rm -f "$gtk3_dir/gtk.css" "$gtk4_dir/gtk.css"
             cp "$generated_file" "$gtk3_dir/gtk.css"
             cp "$generated_file" "$gtk4_dir/gtk.css"
 
