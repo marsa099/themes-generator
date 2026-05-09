@@ -3,8 +3,8 @@
   "base": "light",
   "overrides": {
     "text": "{{foreground.primary}}",
-    "inactive": "{{foreground.muted}}",
-    "subtle": "{{foreground.subtle}}",
+    "inactive": "{{foreground.secondary}}",
+    "subtle": "{{foreground.secondary}}",
     "claude": "{{accent.orange}}",
     "claudeShimmer": "{{accent.yellow}}",
     "success": "{{semantic.success}}",
@@ -15,9 +15,10 @@
     "promptBorder": "{{background.overlay}}",
     "promptBorderShimmer": "{{foreground.muted}}",
 
-    "userMessageBackground": "{{background.selection}}",
-    "userMessageBackgroundHover": "{{background.surface}}",
-    "selectionBg": "{{background.selection}}",
+    "userMessageBackground": "{{background.surface}}",
+    "userMessageBackgroundHover": "{{background.overlay}}",
+    "messageActionsBackground": "{{background.surface}}",
+    "selectionBg": "{{background.overlay}}",
     "bashMessageBackgroundColor": "{{background.surface}}",
     "memoryBackgroundColor": "{{background.surface}}",
 
@@ -31,8 +32,8 @@
     "fastMode": "{{accent.orange}}",
     "fastModeShimmer": "{{accent.yellow}}",
 
-    "permission": "{{accent.purple}}",
-    "permissionShimmer": "{{accent.orange}}",
+    "permission": "{{accent.blue}}",
+    "permissionShimmer": "{{accent.cyan}}",
     "autoAccept": "{{accent.green}}",
     "planMode": "{{accent.cyan}}",
     "ide": "{{accent.blue}}",
@@ -42,8 +43,8 @@
     "merged": "{{accent.purple}}",
 
     "inverseText": "{{background.primary}}",
-    "inactiveShimmer": "{{foreground.muted}}",
-    "suggestion": "{{foreground.subtle}}",
+    "inactiveShimmer": "{{foreground.secondary}}",
+    "suggestion": "{{foreground.muted}}",
     "remember": "{{accent.purple}}",
     "background": "{{background.primary}}",
     "foreground": "{{foreground.primary}}",

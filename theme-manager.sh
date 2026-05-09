@@ -283,26 +283,28 @@ apply_tool_theme() {
             log_success "Applied process-compose theme (local)"
             ;;
         "claude-code")
-            # Claude Code reads custom themes from ~/.claude/themes/<slug>.json.
-            # We write a single dotfiles.json that's swapped between light/dark
-            # bases per apply, and pin settings.json's theme to "custom:dotfiles"
-            # so Claude Code re-reads on its next session start.
+            # Claude Code 2.1.x only honours its built-in theme names. We pin
+            # to {light,dark}-ansi so all colors resolve through ANSI escapes,
+            # which our ghostty palette controls — that's the only knob we have
+            # for cross-tool consistency. dotfiles.json is kept for forward
+            # compatibility but isn't read by 2.1.x.
             local cc_themes="$HOME/.claude/themes"
             local cc_settings="$HOME/.claude/settings.json"
+            local cc_theme_name="${theme_mode}-ansi"
             mkdir -p "$cc_themes"
             cp "$generated_file" "$cc_themes/dotfiles.json"
             log_success "Wrote claude-code ${theme_mode} theme to dotfiles.json"
             if [[ -f "$cc_settings" ]]; then
-                python3 - "$cc_settings" << 'PYEOF'
+                python3 - "$cc_settings" "$cc_theme_name" << 'PYEOF'
 import json, sys
-path = sys.argv[1]
+path, name = sys.argv[1], sys.argv[2]
 with open(path) as f:
     s = json.load(f)
-if s.get("theme") != "custom:dotfiles":
-    s["theme"] = "custom:dotfiles"
+if s.get("theme") != name:
+    s["theme"] = name
     with open(path, "w") as f:
         json.dump(s, f, indent=2)
-    print("Pinned settings.json theme to custom:dotfiles")
+    print(f"Set settings.json theme to {name}")
 PYEOF
             fi
             ;;
@@ -428,6 +430,12 @@ PYEOF
             mkdir -p "$target_dir"
             cp "$generated_file" "$target_dir/colors.sh"
             log_success "Applied claude-statusline theme"
+            ;;
+        "claudeck")
+            local target_dir="$HOME/.config/claudeck"
+            mkdir -p "$target_dir"
+            cp "$generated_file" "$target_dir/theme.toml"
+            log_success "Applied claudeck theme"
             ;;
         "pi")
             local pi_dir="$HOME/.pi/agent/themes"

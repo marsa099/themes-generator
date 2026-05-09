@@ -17,6 +17,7 @@
 
     "userMessageBackground": "{{background.selection}}",
     "userMessageBackgroundHover": "{{background.surface}}",
+    "messageActionsBackground": "{{background.selection}}",
     "selectionBg": "{{background.selection}}",
     "bashMessageBackgroundColor": "{{background.surface}}",
     "memoryBackgroundColor": "{{background.surface}}",
