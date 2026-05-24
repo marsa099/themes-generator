@@ -8,13 +8,11 @@ set -g status-style "bg={{background.secondary}},fg={{foreground.primary}}"
 set -g status-left "#[fg={{accent.green}},bold]#{?client_prefix,#[fg={{accent.red}}],} #S "
 set -g status-right "#[fg={{accent.blue}}]%H:%M"
 
-# Window tabs
-set -g window-status-style "fg={{foreground.muted}}"
-set -g window-status-format " #I:#W "
-set -g window-status-current-style "fg={{accent.blue}},bold"
-set -g window-status-current-format " #I:#W "
+# Window tabs — rounded pill badges (requires Nerd Font)
+set -g window-status-format "#[fg={{background.overlay}},bg={{background.secondary}}]#[fg={{foreground.muted}},bg={{background.overlay}}] #I:#W #[fg={{background.overlay}},bg={{background.secondary}}]"
+set -g window-status-current-format "#[fg={{accent.gold}},bg={{background.secondary}}]#[fg={{background.primary}},bg={{accent.gold}},bold] #I:#W #[fg={{accent.gold}},bg={{background.secondary}}]"
 set -g window-status-activity-style "fg={{accent.yellow}},none"
-set -g window-status-separator ""
+set -g window-status-separator " "
 
 # Pane borders
 set -g pane-border-style "fg={{foreground.muted}}"
