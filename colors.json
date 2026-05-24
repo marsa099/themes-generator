@@ -199,15 +199,15 @@
         "blue": "accent.blue",
         "magenta": "accent.purple",
         "cyan": "accent.cyan",
-        "white": "background.primary",
-        "bright_black": "foreground.secondary",
+        "white": "foreground.secondary",
+        "bright_black": "foreground.muted",
         "bright_red": "accent.red",
         "bright_green": "accent.green",
         "bright_yellow": "accent.yellow",
         "bright_blue": "accent.blue",
         "bright_magenta": "accent.purple",
         "bright_cyan": "accent.cyan",
-        "bright_white": "background.secondary"
+        "bright_white": "foreground.primary"
       }
     }
   }

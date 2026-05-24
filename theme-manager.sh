@@ -622,11 +622,13 @@ apply_system_theme() {
         niri_config="$live_niri"
     fi
     if [[ -f "$niri_config" ]]; then
+        # Active border uses the theme's own accent.orange so light mode gets
+        # its muted rose (#d7827e) instead of the dark-cursor #FF570D.
         if [[ "$theme_mode" == "dark" ]]; then
-            local active_color=$(jq -r '.themes.dark.semantic.cursor' "$COLORS_FILE")
+            local active_color=$(jq -r '.themes.dark.accent.orange' "$COLORS_FILE")
             local inactive_color="#3A3A3A"
         else
-            local active_color=$(jq -r '.themes.light.semantic.cursor' "$COLORS_FILE")
+            local active_color=$(jq -r '.themes.light.accent.orange' "$COLORS_FILE")
             local inactive_color="#999999"
         fi
         sed -i "s/active-color \"#[0-9a-fA-F]*\"/active-color \"${active_color}\"/g" "$niri_config"
