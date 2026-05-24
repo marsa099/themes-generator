@@ -207,7 +207,7 @@
         "bright_blue": "accent.blue",
         "bright_magenta": "accent.purple",
         "bright_cyan": "accent.cyan",
-        "bright_white": "foreground.primary"
+        "bright_white": "background.secondary"
       }
     }
   }
