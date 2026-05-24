@@ -175,7 +175,20 @@ apply_tool_theme() {
                 mkdir -p "$target_dir/colors"
                 cp "$generated_file" "$target_dir/colors/custom-theme-${theme_mode}.lua"
                 local label=$([[ "$is_managed" == true ]] && echo "managed" || echo "local")
-                log_success "Applied Neovim ${theme_mode} theme ($label)"
+                # Reload running nvim instances via their RPC sockets so the
+                # new colorscheme takes effect without restarting nvim.
+                local reloaded=0
+                for sock in /run/user/$(id -u)/nvim.*.0; do
+                    [[ -S "$sock" ]] || continue
+                    nvim --server "$sock" --remote-send \
+                        "<C-\\><C-N>:colorscheme custom-theme-${theme_mode}<CR>" \
+                        2>/dev/null && reloaded=$((reloaded + 1)) || true
+                done
+                if (( reloaded > 0 )); then
+                    log_success "Applied Neovim ${theme_mode} theme ($label, reloaded $reloaded instance(s))"
+                else
+                    log_success "Applied Neovim ${theme_mode} theme ($label)"
+                fi
             fi
             ;;
         "mako")
