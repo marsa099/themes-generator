@@ -129,7 +129,7 @@
       "foreground": {
         "primary": "#2D4A3D",
         "secondary": "#575279",
-        "muted": "#9893a5",
+        "muted": "#6B7280",
         "subtle": "#8A92A7"
       },
       "accent": {
@@ -143,7 +143,7 @@
         "pink": "#8A92A7",
         "teal": "#3D8A82",
         "gold": "#A07845",
-        "sage": "#6B8254",
+        "sage": "#4F7A3A",
         "slate": "#5A7A96",
         "lavender": "#7A6290",
         "rose": "#A06060",

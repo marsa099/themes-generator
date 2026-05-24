@@ -205,6 +205,22 @@ apply_tool_theme() {
                 fi
             fi
             ;;
+        "dunst")
+            local target_dir="$HOME/.config/dunst"
+            mkdir -p "$target_dir"
+            cp "$generated_file" "$target_dir/dunstrc"
+            # dunst has no reload signal; restart via systemd user service if
+            # active, else kill the process and let dbus activation respawn it.
+            if systemctl --user is-active --quiet dunst.service 2>/dev/null; then
+                systemctl --user restart dunst.service
+                log_success "Applied and restarted dunst theme"
+            elif pgrep -x dunst > /dev/null; then
+                pkill -x dunst
+                log_success "Applied dunst theme (killed; dbus will respawn)"
+            else
+                log_success "Applied dunst theme (not running)"
+            fi
+            ;;
         "waybar")
             local target_dir is_managed
             if get_tool_target "$tool"; then
