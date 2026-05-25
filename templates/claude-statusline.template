@@ -12,3 +12,7 @@ cs_pct_low_hex="{{accent.sage}}"
 cs_pct_mid_hex="{{accent.gold}}"
 cs_pct_high_hex="{{accent.purple}}"
 cs_pct_crit_hex="{{accent.red}}"
+
+# Model-name pill — matches active tmux window pill
+cs_pill_bg_hex="{{accent.gold}}"
+cs_pill_fg_hex="{{background.primary}}"
