@@ -312,14 +312,18 @@ apply_tool_theme() {
             log_success "Applied process-compose theme (local)"
             ;;
         "claude-code")
-            # Claude Code 2.1.x only honours its built-in theme names. We pin
-            # to {light,dark}-ansi so all colors resolve through ANSI escapes,
-            # which our ghostty palette controls — that's the only knob we have
-            # for cross-tool consistency. dotfiles.json is kept for forward
-            # compatibility but isn't read by 2.1.x.
+            # Claude Code 2.1.x only honours its built-in theme names.
+            # - Light: pin to "light-ansi" so colors flow through ghostty's
+            #   palette (cross-tool consistency).
+            # - Dark: pin to "dark" (non-ansi) because dark-ansi's diff
+            #   rendering paints a green/red wash that hides bash identifiers
+            #   on dark backgrounds. The built-in "dark" theme uses sensible
+            #   RGB diff backgrounds (dark green/red) instead.
+            # dotfiles.json is kept for forward compatibility but isn't read by 2.1.x.
             local cc_themes="$HOME/.claude/themes"
             local cc_settings="$HOME/.claude/settings.json"
-            local cc_theme_name="${theme_mode}-ansi"
+            local cc_theme_name="${theme_mode}"
+            [[ "$theme_mode" == "light" ]] && cc_theme_name="light-ansi"
             mkdir -p "$cc_themes"
             cp "$generated_file" "$cc_themes/dotfiles.json"
             log_success "Wrote claude-code ${theme_mode} theme to dotfiles.json"
