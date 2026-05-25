@@ -30,7 +30,7 @@ window {
     background-color:   @bg-primary;
     border:             2px solid;
     border-color:       @accent-cursor;
-    border-radius:      10px;
+    border-radius:      8px;
     width:              500px;
     padding:            20px;
 }
