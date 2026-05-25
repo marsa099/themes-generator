@@ -228,10 +228,11 @@ apply_tool_theme() {
                 cp "$generated_file" "$target_dir/style.css"
                 local label=$([[ "$is_managed" == true ]] && echo "managed" || echo "local")
                 if pgrep waybar > /dev/null; then
-                    pkill waybar
-                    niri msg action spawn -- waybar &
-                    disown 2>/dev/null || true
-                    log_success "Applied and reloaded Waybar theme ($label)"
+                    # waybar's config has reload_style_on_change: true, so it
+                    # picks up the new style.css instantly without restarting.
+                    # No pkill/respawn → no disappear/reappear flash and the
+                    # layout below it doesn't jump.
+                    log_success "Applied Waybar theme ($label, live-reloaded)"
                 else
                     log_success "Applied Waybar theme ($label, not running)"
                 fi
@@ -590,6 +591,29 @@ apply_all() {
     log_success "All themes applied for $theme_mode mode"
 }
 
+# Fast dconf color-scheme write. Decoupled from apply_system_theme so we can
+# trigger ghostty's DBus-based reload right after its theme file is written,
+# instead of waiting for the full apply_all chain to finish.
+signal_color_scheme() {
+    local theme_mode=$1
+    local gtk_theme dconf_gtk_theme
+    if [[ "$theme_mode" == "dark" ]]; then
+        gtk_theme="prefer-dark"
+        dconf_gtk_theme="Adwaita-dark"
+    else
+        gtk_theme="prefer-light"
+        dconf_gtk_theme="Adwaita"
+    fi
+    if command -v dconf &> /dev/null; then
+        dconf write /org/gnome/desktop/interface/color-scheme "'${gtk_theme}'" 2>/dev/null || true
+        dconf write /org/gnome/desktop/interface/gtk-theme "'${dconf_gtk_theme}'" 2>/dev/null || true
+        log_success "Signaled color-scheme=${gtk_theme} (ghostty should react now)"
+    elif command -v gsettings &> /dev/null; then
+        gsettings set org.gnome.desktop.interface color-scheme "$gtk_theme" 2>/dev/null || true
+        log_success "Signaled color-scheme=${gtk_theme} (ghostty should react now)"
+    fi
+}
+
 # Apply system-wide theme settings (gsettings, GTK/Qt)
 apply_system_theme() {
     local theme_mode=$1
@@ -682,11 +706,25 @@ switch_theme() {
     # Write theme mode to file (this triggers file watchers like Neovim)
     set_theme_mode "$theme_mode"
 
-    # Generate and apply all themes
+    # Front-load the tools the user actually sees switch. Order matters:
+    # signal dconf the SECOND ghostty's theme file is on disk so its DBus
+    # reload kicks off in parallel with everything that follows. Tmux and
+    # waybar are cheap to reload (source-file / live CSS) and follow
+    # immediately after.
+    generate_tool_theme "ghostty" "$theme_mode" > /dev/null
+    apply_tool_theme    "ghostty" "$theme_mode"
+    signal_color_scheme "$theme_mode"
+    generate_tool_theme "tmux"    "$theme_mode" > /dev/null
+    generate_tool_theme "waybar"  "$theme_mode" > /dev/null
+    apply_tool_theme    "tmux"    "$theme_mode"
+    apply_tool_theme    "waybar"  "$theme_mode"
+
+    # Generate and apply the rest
     generate_all "$theme_mode"
     apply_all "$theme_mode"
 
-    # Apply system-wide settings
+    # Rest of system-wide settings (niri border, GTK env vars, etc.) —
+    # the dconf write inside this is now a no-op but kept for idempotence.
     apply_system_theme "$theme_mode"
 
     # Some Electron apps (Vesktop, Slack) detect the theme change live
@@ -701,17 +739,18 @@ switch_theme() {
 # restarts the apps that are *currently running* so a toggle when
 # they're closed doesn't surprise-spawn them.
 restart_electron_apps() {
-    # Vesktop (Discord) — comm is `electron`, but cmdline contains
-    # "Vesktop" / "vesktop" via its path/data-dir, so match that.
-    if pgrep -if vesktop >/dev/null 2>&1; then
-        log_info "Restarting Vesktop…"
-        pkill -if vesktop 2>/dev/null
-        sleep 1
-        pkill -KILL -if vesktop 2>/dev/null
-        sleep 0.3
-        setsid -f vesktop </dev/null >/dev/null 2>&1 &
-        disown 2>/dev/null || true
-    fi
+    # Vesktop (Discord) — temporarily disabled while iterating on toggle
+    # latency. Re-enable when the rest of the chain is fast enough that
+    # the ~1.3s vesktop restart doesn't dominate.
+    # if pgrep -if vesktop >/dev/null 2>&1; then
+    #     log_info "Restarting Vesktop…"
+    #     pkill -if vesktop 2>/dev/null
+    #     sleep 1
+    #     pkill -KILL -if vesktop 2>/dev/null
+    #     sleep 0.3
+    #     setsid -f vesktop </dev/null >/dev/null 2>&1 &
+    #     disown 2>/dev/null || true
+    # fi
 
     # Slack — comm is exactly `slack`.
     if pgrep -x slack >/dev/null 2>&1; then
