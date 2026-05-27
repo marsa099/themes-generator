@@ -31,3 +31,9 @@ set -g clock-mode-colour "{{accent.blue}}"
 # Popups (tmux 3.4+)
 set -gq popup-style "bg={{background.primary}}"
 set -gq popup-border-style "fg={{foreground.muted}}"
+
+# Re-attach tmux-continuum auto-save hook: sourcing this file overwrites
+# status-right, which clobbers the #(continuum_save.sh) interpolation that
+# drives periodic saves. Re-running continuum.tmux re-prepends it (idempotent).
+if-shell '[ -x ~/.config/tmux/plugins/tmux-continuum/continuum.tmux ]' \
+    'run-shell -b ~/.config/tmux/plugins/tmux-continuum/continuum.tmux'
