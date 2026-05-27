@@ -27,9 +27,8 @@
 }
 
 window {
-    background-color:   @bg-primary;
-    border:             2px solid;
-    border-color:       @accent-cursor;
+    background-color:   @bg-selection;
+    border:             0;
     border-radius:      8px;
     width:              500px;
     padding:            20px;
