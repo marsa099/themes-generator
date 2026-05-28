@@ -6,7 +6,7 @@
 # Index map (set by kitty.template, consistent across dark/light):
 #   -1 default fg/bg | 8 muted grey | 7 light / 15 lightest | 0 dark
 #   1 red | 3 yellow | 4 blue | 6 cyan
-# Select it by setting `theme = themegen` in endcord's config.ini [theme] section.
+# Select it by setting `theme = themegen` in the [main] section of endcord's config.ini.
 [theme]
 color_default = [-1, -1]
 color_chat_mention = [-1, 8]
