@@ -81,13 +81,13 @@
         "diff_delete_bg": "#3B1E1E",
         "diff_change_bg": "#2E2A1A",
         "diff_text_bg": "#2A3A4A",
-        "highlight_succ": "#2B3D30",
+        "highlight_succ": "#2D5C3A",
         "highlight_warn": "#3A291B",
-        "highlight_err": "#3A2F25",
-        "highlight_succ_dim": "#222B25",
-        "highlight_err_dim": "#2A2218",
-        "highlight_succ_word": "#4A6C50",
-        "highlight_err_word": "#5E4530"
+        "highlight_err": "#7A343C",
+        "highlight_succ_dim": "#243D2C",
+        "highlight_err_dim": "#46282C",
+        "highlight_succ_word": "#3C7E52",
+        "highlight_err_word": "#9A4048"
       },
       "terminal": {
         "black": "background.tertiary",

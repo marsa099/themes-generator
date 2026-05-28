@@ -83,27 +83,27 @@ get_color() {
 generate_tool_theme() {
     local tool=$1
     local theme_mode=$2
-    
+
     # Try theme-specific template first, then fall back to generic
     local template_file="$TEMPLATES_DIR/${tool}-${theme_mode}.template"
     if [[ ! -f "$template_file" ]]; then
         template_file="$TEMPLATES_DIR/${tool}.template"
     fi
-    
+
     local output_dir="$GENERATED_DIR/${tool}"
-    
+
     if [[ ! -f "$template_file" ]]; then
         log_warning "Template for $tool not found: $template_file"
         return 1
     fi
-    
+
     log_info "Generating $tool theme for $theme_mode mode..."
-    
+
     # Create output directory and generate theme
     mkdir -p "$output_dir"
     local output_file="$output_dir/${theme_mode}.theme"
     python3 "$THEMES_DIR/theme-processor.py" "$template_file" "$COLORS_FILE" "$theme_mode" "$output_file" "$tool"
-    
+
     log_success "Generated $tool theme: $output_file"
 }
 
@@ -139,7 +139,7 @@ get_tool_target() {
     local tool=$1
     local dotfiles_path="$DOTFILES_DIR/${tool}/.config/${tool}"
     local local_path="$HOME/.config/${tool}"
-    
+
     # Check if ~/.config/${tool} is a symlink (managed by home-manager/stow)
     # If so, write to dotfiles source. Otherwise write to ~/.config directly.
     if [[ -L "$local_path" ]] && [[ -d "$dotfiles_path" ]]; then
@@ -313,17 +313,18 @@ apply_tool_theme() {
             log_success "Applied process-compose theme (local)"
             ;;
         "claude-code")
-            # Claude Code 2.1.x only honours its built-in theme names.
-            # - Light: pin to "light-ansi" so colors flow through ghostty's
-            #   palette (cross-tool consistency).
-            # - Dark: pin to "dark" (non-ansi) because dark-ansi's diff
-            #   rendering paints a green/red wash that hides bash identifiers
-            #   on dark backgrounds. The built-in "dark" theme uses sensible
-            #   RGB diff backgrounds (dark green/red) instead.
-            # dotfiles.json is kept for forward compatibility but isn't read by 2.1.x.
+            # Claude Code 2.1.141+ loads custom themes live from
+            # ~/.claude/themes/<slug>.json (slug = filename), selected via
+            # "custom:<slug>". We write dotfiles.json and activate it.
+            # - Dark: use "custom:dotfiles" so the repo controls diff colors.
+            #   The built-in "dark" theme's diff backgrounds are too dark and
+            #   vanish under window transparency (niri ghostty opacity), making
+            #   deleted lines unreadable. Our custom diff colors are brighter.
+            # - Light: still pin to "light-ansi" so colors flow through
+            #   ghostty's palette (cross-tool consistency).
             local cc_themes="$HOME/.claude/themes"
             local cc_settings="$HOME/.claude/settings.json"
-            local cc_theme_name="${theme_mode}"
+            local cc_theme_name="custom:dotfiles"
             [[ "$theme_mode" == "light" ]] && cc_theme_name="light-ansi"
             mkdir -p "$cc_themes"
             cp "$generated_file" "$cc_themes/dotfiles.json"
@@ -911,7 +912,7 @@ EOF
 # Main script logic
 main() {
     check_dependencies
-    
+
     case "${1:-}" in
         "generate")
             generate_all "$2"
