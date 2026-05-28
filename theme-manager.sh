@@ -391,6 +391,16 @@ PYEOF
                 log_success "Applied clipse theme ($label)"
             fi
             ;;
+        "endcord")
+            local target_dir is_managed
+            if get_tool_target "$tool"; then
+                mkdir -p "$target_dir/Themes"
+                cp "$generated_file" "$target_dir/Themes/themegen.ini"
+                local label=$([[ "$is_managed" == true ]] && echo "managed" || echo "local")
+                # endcord has no runtime reload; restart endcord to pick up changes.
+                log_success "Applied endcord theme ($label) - set 'theme = themegen' in config.ini, restart endcord"
+            fi
+            ;;
         "kitty")
             local target_dir is_managed
             if get_tool_target "$tool"; then
@@ -739,18 +749,32 @@ switch_theme() {
 # restarts the apps that are *currently running* so a toggle when
 # they're closed doesn't surprise-spawn them.
 restart_electron_apps() {
-    # Vesktop (Discord) — temporarily disabled while iterating on toggle
-    # latency. Re-enable when the rest of the chain is fast enough that
-    # the ~1.3s vesktop restart doesn't dominate.
-    # if pgrep -if vesktop >/dev/null 2>&1; then
-    #     log_info "Restarting Vesktop…"
-    #     pkill -if vesktop 2>/dev/null
-    #     sleep 1
-    #     pkill -KILL -if vesktop 2>/dev/null
-    #     sleep 0.3
-    #     setsid -f vesktop </dev/null >/dev/null 2>&1 &
-    #     disown 2>/dev/null || true
-    # fi
+    # Electron-wrapped chat clients (Vesktop, teams-for-linux) don't honor
+    # nativeTheme, prefers-color-scheme, or in-process CSS reload reliably
+    # — Microsoft's Teams Web bundle in particular ignores every external
+    # signal we tried. The only working pattern is a hard restart.
+    if pgrep -if vesktop >/dev/null 2>&1; then
+        log_info "Restarting Vesktop…"
+        pkill -if vesktop 2>/dev/null
+        sleep 1
+        pkill -KILL -if vesktop 2>/dev/null
+        sleep 0.3
+        # --start-minimized: comes up minimized to tray, no focus steal and
+        # no splash window flashes in the foreground.
+        setsid -f vesktop --start-minimized </dev/null >/dev/null 2>&1 &
+        disown 2>/dev/null || true
+    fi
+
+    if pgrep -if teams-for-linux >/dev/null 2>&1; then
+        log_info "Restarting teams-for-linux…"
+        pkill -if teams-for-linux 2>/dev/null
+        sleep 1
+        pkill -KILL -if teams-for-linux 2>/dev/null
+        sleep 0.3
+        # --minimized: window starts minimized to tray; no focus steal.
+        setsid -f teams-for-linux --minimized </dev/null >/dev/null 2>&1 &
+        disown 2>/dev/null || true
+    fi
 
     # Slack — comm is exactly `slack`.
     if pgrep -x slack >/dev/null 2>&1; then
