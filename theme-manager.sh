@@ -315,17 +315,20 @@ apply_tool_theme() {
         "claude-code")
             # Claude Code 2.1.141+ loads custom themes live from
             # ~/.claude/themes/<slug>.json (slug = filename), selected via
-            # "custom:<slug>". We write dotfiles.json and activate it.
-            # - Dark: use "custom:dotfiles" so the repo controls diff colors.
-            #   The built-in "dark" theme's diff backgrounds are too dark and
-            #   vanish under window transparency (niri ghostty opacity), making
-            #   deleted lines unreadable. Our custom diff colors are brighter.
-            # - Light: still pin to "light-ansi" so colors flow through
-            #   ghostty's palette (cross-tool consistency).
+            # "custom:<slug>". We write dotfiles.json and activate it for both
+            # modes so the repo fully controls Claude Code's colors.
+            # - Dark: the built-in "dark" theme's diff backgrounds are too dark
+            #   and vanish under window transparency (niri ghostty opacity),
+            #   making deleted lines unreadable. Our custom diff colors are
+            #   brighter.
+            # - Light: the built-in "light-ansi" theme used the palette's accent
+            #   colors as diff line backgrounds (dark text on #5E7270 / #ED333B,
+            #   ~1.9-2.4:1 contrast = unreadable). The custom theme uses proper
+            #   pastel diff backgrounds (~5-8:1) and explicit hex everywhere, so
+            #   it also avoids the ANSI 256-cell user-message-background issue.
             local cc_themes="$HOME/.claude/themes"
             local cc_settings="$HOME/.claude/settings.json"
             local cc_theme_name="custom:dotfiles"
-            [[ "$theme_mode" == "light" ]] && cc_theme_name="light-ansi"
             mkdir -p "$cc_themes"
             cp "$generated_file" "$cc_themes/dotfiles.json"
             log_success "Wrote claude-code ${theme_mode} theme to dotfiles.json"
