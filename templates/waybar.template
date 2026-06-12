@@ -203,6 +203,23 @@ window#waybar {
   padding: 0;
 }
 
+#custom-claude-cost {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 12px;
+  font-weight: bold;
+  color: {{accent.green}};
+}
+
+#custom-claude-cost.medium {
+  color: {{accent.yellow}};
+}
+
+#custom-claude-cost.high {
+  color: {{accent.red}};
+}
+
 #tray {
   background: alpha({{background.secondary}}, 0.95);
   border-radius: 8px;
