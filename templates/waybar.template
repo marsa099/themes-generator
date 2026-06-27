@@ -203,6 +203,16 @@ window#waybar {
   padding: 0;
 }
 
+/* Content Delivery → IdP status dots — pill matches the other modules.
+   The D/T/P dot colors are inline pango (themed via waybar-idp palette),
+   so only the container background/shape is set here. */
+#custom-idp-status {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 12px;
+}
+
 #custom-claude-cost {
   background: alpha({{background.secondary}}, 0.95);
   border-radius: 8px;
@@ -218,6 +228,17 @@ window#waybar {
 
 #custom-claude-cost.high {
   color: {{accent.red}};
+}
+
+/* Claude waiting indicator — pill matches the other tray modules; orange to
+   signal an un-acknowledged Claude prompt. Hidden when nothing is pending. */
+#custom-claude-pending {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 12px;
+  font-weight: bold;
+  color: {{accent.orange}};
 }
 
 #tray {
