@@ -238,6 +238,16 @@ apply_tool_theme() {
                 fi
             fi
             ;;
+        "waybar-idp")
+            # The IdP indicator (custom/idp-status) renders inline pango colors,
+            # so it sources a sourceable palette instead of reading style.css.
+            # Write the active mode's colors to its cache dir; the module's 30s
+            # poll picks them up. No CSS, no reload needed.
+            local idp_dir="$HOME/.cache/waybar-idp-status"
+            mkdir -p "$idp_dir"
+            cp "$generated_file" "$idp_dir/colors.sh"
+            log_success "Applied waybar-idp ${theme_mode} palette"
+            ;;
         "fish")
             if command -v fish &> /dev/null; then
                 # Persist the generated fish colors to a conf.d file so every
@@ -580,6 +590,20 @@ SVGEOF
             fi
 
             log_success "Applied Kvantum Qt theme"
+            ;;
+        "quickshell")
+            # qs-picker lives at ~/repos/qs-picker. Both palettes are inlined in
+            # the generated Theme.qml; Quickshell watches its QML files and live-
+            # reloads, so no restart is needed. (A dark/light toggle doesn't even
+            # regenerate this file — Theme.qml watches ~/.config/theme_mode and
+            # switches palette at runtime.)
+            local qs_theme="$HOME/repos/qs-picker/modules/Theme.qml"
+            if [[ -d "$(dirname "$qs_theme")" ]]; then
+                cp "$generated_file" "$qs_theme"
+                log_success "Applied quickshell (qs-picker) theme"
+            else
+                log_warning "qs-picker not found at ~/repos/qs-picker; skipping"
+            fi
             ;;
         *)
             log_warning "Unknown tool: $tool"

@@ -55,6 +55,7 @@ def process_template(template_file, colors_file, theme_mode, output_file, tool_n
     base = os.path.basename(template_file)
     is_dual_theme_template = (
         'nvim' in base or base.startswith('chromium-palette')
+        or base.startswith('quickshell')
     )
 
     if is_dual_theme_template:
