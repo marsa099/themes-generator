@@ -554,3 +554,37 @@ vim colors.json
 | Toggle themes | `./theme-manager.sh toggle` |
 | Regenerate all | `./theme-manager.sh generate` |
 | Check status | `./theme-manager.sh status` |
+
+## Upstream / Provenance
+
+This repo (`marsa099/themes-generator`) was originally forked from daphen's theme
+system, but the two have **diverged into unrelated git histories** — this one was
+split out of an Arch dotfiles repo, so there is **no common merge base**. A plain
+`git merge upstream/main` will refuse ("unrelated histories"); integrate changes by
+comparing and cherry-picking individual files instead.
+
+The `upstream` remote still points at **`github.com/daphen/themes-generator`, which
+is dead** (frozen since 2025-12-15). daphen migrated Arch → NixOS and **moved the
+live theme system into his nixos-config repo**:
+
+```
+github.com/daphen/nixos-config  →  dotfiles/themes/.config/themes/
+    ├── theme-manager.sh
+    ├── colors.json
+    └── templates/
+```
+
+That subtree is the real "upstream" to diff against now. To compare without cloning
+the whole repo:
+
+```bash
+gh api repos/daphen/nixos-config/contents/dotfiles/themes/.config/themes/theme-manager.sh \
+  --jq '.content' | base64 -d > /tmp/daphen-theme-manager.sh
+diff /tmp/daphen-theme-manager.sh theme-manager.sh
+```
+
+As of 2026-06-28: this fork is ahead on `switch_theme` performance (front-loads
+ghostty/kitty/tmux/waybar so the visible terminal recolors immediately, and skips +
+cleans up stale `/tmp/kitty-<pid>` sockets — both of which kept theme toggles slow).
+daphen's version has features this one lacks (`apply_wallpaper`, plus `slk`,
+`endcord` light/dark split, and `quickshell-client` templates) if they're ever wanted.
