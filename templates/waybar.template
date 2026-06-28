@@ -213,6 +213,25 @@ window#waybar {
   margin-right: 12px;
 }
 
+/* Currently-focused Claude session name. Hidden when the focused window
+   isn't a Claude session. .busy turns it orange; .remote tints it cyan. */
+#custom-claude-focused {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 12px;
+  font-weight: bold;
+  color: {{foreground.secondary}};
+}
+
+#custom-claude-focused.remote {
+  color: {{accent.cyan}};
+}
+
+#custom-claude-focused.busy {
+  color: {{accent.orange}};
+}
+
 #custom-claude-cost {
   background: alpha({{background.secondary}}, 0.95);
   border-radius: 8px;
