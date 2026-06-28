@@ -209,14 +209,29 @@ apply_tool_theme() {
             local target_dir="$HOME/.config/dunst"
             mkdir -p "$target_dir"
             cp "$generated_file" "$target_dir/dunstrc"
-            # dunst has no reload signal; restart via systemd user service if
-            # active, else kill the process and let dbus activation respawn it.
-            if systemctl --user is-active --quiet dunst.service 2>/dev/null; then
-                systemctl --user restart dunst.service
-                log_success "Applied and restarted dunst theme"
-            elif pgrep -x dunst > /dev/null; then
-                pkill -x dunst
-                log_success "Applied dunst theme (killed; dbus will respawn)"
+            # Reload the live daemon in place. `dunstctl reload` re-reads the
+            # config in the running process — no kill, no timing gap. The old
+            # pkill approach relied on dbus re-activation, but dbus only respawns
+            # dunst when the NEXT notification arrives, so the daemon kept serving
+            # the stale (e.g. dark) theme until then. dunst is also commonly
+            # dbus-activated rather than run under dunst.service, so the
+            # is-active check missed it entirely.
+            #
+            # Match the process name with -x against both "dunst" and NixOS's
+            # wrapped comm ".dunst-wrapped" — a bare `pgrep -x dunst` never
+            # matches on Nix, which silently skipped dunst on every toggle and
+            # left notifications stuck on the previous theme.
+            local dunst_pat='\.?dunst(-wrapped)?'
+            if pgrep -x "$dunst_pat" > /dev/null; then
+                if command -v dunstctl &> /dev/null && dunstctl reload 2>/dev/null; then
+                    log_success "Applied and reloaded dunst theme"
+                elif systemctl --user is-active --quiet dunst.service 2>/dev/null; then
+                    systemctl --user restart dunst.service
+                    log_success "Applied and restarted dunst theme"
+                else
+                    pkill -x "$dunst_pat"
+                    log_success "Applied dunst theme (killed; dbus will respawn)"
+                fi
             else
                 log_success "Applied dunst theme (not running)"
             fi
