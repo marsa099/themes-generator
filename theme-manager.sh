@@ -420,12 +420,19 @@ PYEOF
             if get_tool_target "$tool"; then
                 mkdir -p "$target_dir"
                 cp "$generated_file" "$target_dir/theme.conf"
-                # Reload all kitty instances
-                if pgrep kitty > /dev/null; then
-                    for socket in /tmp/kitty-*; do
-                        kitty @ --to "unix:$socket" set-colors -a -c "$generated_file" 2>/dev/null || true
-                    done
-                fi
+                # Retheme live kitty instances in parallel; skip + clean up stale
+                # sockets (closed instances leave /tmp/kitty-<pid> behind, and firing
+                # kitty @ at each dead one blocks until timeout — the other half of
+                # what made theme toggles slow, alongside front-loading in switch_theme).
+                for socket in /tmp/kitty-*; do
+                    [ -S "$socket" ] || continue
+                    if [ -d "/proc/${socket##*/kitty-}" ]; then
+                        kitty @ --to "unix:$socket" set-colors -a -c "$generated_file" 2>/dev/null &
+                    else
+                        rm -f "$socket"
+                    fi
+                done
+                wait
                 local label=$([[ "$is_managed" == true ]] && echo "managed" || echo "local")
                 log_success "Applied kitty theme ($label)"
             fi
