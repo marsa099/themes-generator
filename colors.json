@@ -27,8 +27,8 @@
       "foreground": {
         "primary": "#EDEDED",
         "secondary": "#C3C8C6",
-        "muted": "#707B84",
-        "subtle": "#707B84"
+        "muted": "#8A95A0",
+        "subtle": "#8A95A0"
       },
       "accent": {
         "red": "#FF7B72",
