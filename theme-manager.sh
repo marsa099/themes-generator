@@ -773,15 +773,21 @@ switch_theme() {
     # immediately after. Kitty is here too — its live set-colors reload is
     # fast (~0.2s) but only useful if it runs BEFORE the ~1.2s generate_all
     # pass, otherwise the terminal the user is staring at lags the toggle.
-    generate_tool_theme "ghostty" "$theme_mode" > /dev/null
-    apply_tool_theme    "ghostty" "$theme_mode"
+    # claude-code is front-loaded too: it's a cheap dotfiles.json write +
+    # live reload, and if it lagged into generate_all the TUI would keep
+    # rendering the OLD theme's blue on the freshly-switched terminal
+    # background for ~1.2s before correcting — a visible colour flash.
+    generate_tool_theme "ghostty"     "$theme_mode" > /dev/null
+    apply_tool_theme    "ghostty"     "$theme_mode"
     signal_color_scheme "$theme_mode"
-    generate_tool_theme "kitty"   "$theme_mode" > /dev/null
-    generate_tool_theme "tmux"    "$theme_mode" > /dev/null
-    generate_tool_theme "waybar"  "$theme_mode" > /dev/null
-    apply_tool_theme    "kitty"   "$theme_mode"
-    apply_tool_theme    "tmux"    "$theme_mode"
-    apply_tool_theme    "waybar"  "$theme_mode"
+    generate_tool_theme "kitty"       "$theme_mode" > /dev/null
+    generate_tool_theme "tmux"        "$theme_mode" > /dev/null
+    generate_tool_theme "waybar"      "$theme_mode" > /dev/null
+    generate_tool_theme "claude-code" "$theme_mode" > /dev/null
+    apply_tool_theme    "kitty"       "$theme_mode"
+    apply_tool_theme    "tmux"        "$theme_mode"
+    apply_tool_theme    "waybar"      "$theme_mode"
+    apply_tool_theme    "claude-code" "$theme_mode"
 
     # Generate and apply the rest
     generate_all "$theme_mode"
