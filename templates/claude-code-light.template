@@ -15,9 +15,9 @@
     "promptBorder": "{{background.overlay}}",
     "promptBorderShimmer": "{{foreground.muted}}",
 
-    "userMessageBackground": "{{background.surface}}",
+    "userMessageBackground": "{{background.selection}}",
     "userMessageBackgroundHover": "{{background.overlay}}",
-    "messageActionsBackground": "{{background.surface}}",
+    "messageActionsBackground": "{{background.selection}}",
     "selectionBg": "{{background.overlay}}",
     "bashMessageBackgroundColor": "{{background.surface}}",
     "memoryBackgroundColor": "{{background.surface}}",
