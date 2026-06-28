@@ -340,8 +340,9 @@ apply_tool_theme() {
         "claude-code")
             # Claude Code 2.1.141+ loads custom themes live from
             # ~/.claude/themes/<slug>.json (slug = filename), selected via
-            # "custom:<slug>". We write dotfiles.json and activate it for both
-            # modes so the repo fully controls Claude Code's colors.
+            # "custom:<slug>". We write a PER-MODE file (dotfiles-light.json /
+            # dotfiles-dark.json) and point settings.json "theme" at it so the
+            # repo fully controls Claude Code's colors.
             # - Dark: the built-in "dark" theme's diff backgrounds are too dark
             #   and vanish under window transparency (niri ghostty opacity),
             #   making deleted lines unreadable. Our custom diff colors are
@@ -351,12 +352,23 @@ apply_tool_theme() {
             #   ~1.9-2.4:1 contrast = unreadable). The custom theme uses proper
             #   pastel diff backgrounds (~5-8:1) and explicit hex everywhere, so
             #   it also avoids the ANSI 256-cell user-message-background issue.
+            # Per-mode files are deliberate: a single "custom:dotfiles" slug kept
+            # settings.json's theme value CONSTANT across toggles, so only the
+            # file *contents* changed — Claude Code never got a theme-change
+            # event and only repainted the new colors lazily on the next render
+            # (~1s later), showing the old theme's blue (#286983) on the freshly
+            # switched background = a visible flash. Flipping the slug per mode
+            # makes settings.json's "theme" actually change, triggering an
+            # immediate, clean reload.
             local cc_themes="$HOME/.claude/themes"
             local cc_settings="$HOME/.claude/settings.json"
-            local cc_theme_name="custom:dotfiles"
+            local cc_theme_name="custom:dotfiles-${theme_mode}"
             mkdir -p "$cc_themes"
+            cp "$generated_file" "$cc_themes/dotfiles-${theme_mode}.json"
+            # Keep the legacy single-file slug in sync so an unswitched session
+            # still reflects the current mode if anything references it.
             cp "$generated_file" "$cc_themes/dotfiles.json"
-            log_success "Wrote claude-code ${theme_mode} theme to dotfiles.json"
+            log_success "Wrote claude-code ${theme_mode} theme (custom:dotfiles-${theme_mode})"
             if [[ -f "$cc_settings" ]]; then
                 python3 - "$cc_settings" "$cc_theme_name" << 'PYEOF'
 import json, sys
