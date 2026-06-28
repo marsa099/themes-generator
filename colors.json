@@ -198,7 +198,7 @@
       "terminal": {
         "black": "foreground.primary",
         "red": "accent.red",
-        "green": "accent.green",
+        "green": "#1A7F37",
         "yellow": "accent.orange",
         "blue": "accent.blue",
         "magenta": "accent.purple",
@@ -206,7 +206,7 @@
         "white": "#BFC2C7",
         "bright_black": "foreground.muted",
         "bright_red": "accent.red",
-        "bright_green": "accent.green",
+        "bright_green": "#2DA44E",
         "bright_yellow": "accent.yellow",
         "bright_blue": "accent.blue",
         "bright_magenta": "accent.purple",
