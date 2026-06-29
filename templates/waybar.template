@@ -202,17 +202,15 @@ window#waybar {
   padding: 0;
 }
 
-/* Content Delivery → IdP status dots, sitting inside the hardware pill where
-   workspaces used to be. Transparent like the other hardware children; the
-   dot colors are inline pango (set by waybar-idp-status). Intra-group spacing
-   is done with symmetric padding (like #cpu/#memory and the #system group),
-   NOT margins — margins don't render reliably on a grouped child. */
+/* Content Delivery → IdP status dots. Its own standalone pill in modules-left
+   (like #custom-devops), so there's a real transparent gap before it instead
+   of being fused into the hardware pill. The dot colors are inline pango,
+   set by waybar-idp-status. */
 #custom-idp-status {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
   padding: 6px 12px;
-  margin: 0;
-  background: transparent;
-  color: {{foreground.primary}};
-  border-radius: 0;
+  margin-left: 12px;
 }
 
 /* Currently-focused Claude session name. Hidden when the focused window
