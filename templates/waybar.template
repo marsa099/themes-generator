@@ -202,14 +202,17 @@ window#waybar {
   padding: 0;
 }
 
-/* Content Delivery → IdP status dots — pill matches the other modules.
-   The D/T/P dot colors are inline pango (themed via waybar-idp palette),
-   so only the container background/shape is set here. */
+/* Content Delivery → IdP status dots, sitting inside the hardware pill where
+   workspaces used to be. Transparent like the other hardware children; the
+   dot colors are inline pango (set by waybar-idp-status). Intra-group spacing
+   is done with symmetric padding (like #cpu/#memory and the #system group),
+   NOT margins — margins don't render reliably on a grouped child. */
 #custom-idp-status {
-  background: alpha({{background.secondary}}, 0.95);
-  border-radius: 8px;
-  padding: 6px 14px;
-  margin-right: 12px;
+  padding: 6px 12px;
+  margin: 0;
+  background: transparent;
+  color: {{foreground.primary}};
+  border-radius: 0;
 }
 
 /* Currently-focused Claude session name. Hidden when the focused window
@@ -230,6 +233,23 @@ window#waybar {
 #custom-claude-focused.busy {
   color: {{accent.orange}};
 }
+
+/* Currently-focused Helium browser profile. Hidden when the focused window
+   isn't Helium. Tinted per profile to match each profile's identity colour. */
+#custom-helium-focused {
+  background: alpha({{background.secondary}}, 0.95);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 12px;
+  font-weight: 500;
+  color: {{foreground.secondary}};
+}
+
+#custom-helium-focused.sis      { color: {{accent.blue}}; }
+#custom-helium-focused.sisadmin { color: {{accent.red}}; }
+#custom-helium-focused.koderiet { color: {{accent.green}}; }
+#custom-helium-focused.regent   { color: {{accent.rose}}; }
+#custom-helium-focused.private  { color: {{accent.cyan}}; }
 
 #custom-claude-cost {
   background: alpha({{background.secondary}}, 0.95);
