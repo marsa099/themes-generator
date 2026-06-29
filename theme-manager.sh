@@ -523,18 +523,6 @@ PYEOF
             cp "$generated_file" "$target_dir/colors.sh"
             log_success "Applied claude-statusline theme"
             ;;
-        "claudeck")
-            local target_dir="$HOME/.config/claudeck"
-            mkdir -p "$target_dir"
-            cp "$generated_file" "$target_dir/theme.toml"
-            log_success "Applied claudeck theme"
-            ;;
-        "tmuxdeck")
-            local target_dir="$HOME/.config/tmuxdeck"
-            mkdir -p "$target_dir"
-            cp "$generated_file" "$target_dir/theme.toml"
-            log_success "Applied tmuxdeck theme (restart tmuxdeck to pick up)"
-            ;;
         "pi")
             local pi_dir="$HOME/.pi/agent/themes"
             mkdir -p "$pi_dir"
