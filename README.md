@@ -574,14 +574,42 @@ github.com/daphen/nixos-config  →  dotfiles/themes/.config/themes/
     └── templates/
 ```
 
-That subtree is the real "upstream" to diff against now. To compare without cloning
-the whole repo:
+That subtree is the real "upstream" to diff against now. (His `daphen/dotfiles`
+repo also contains a `themes/` copy, but that's the frozen Arch-era layout — the
+nixos-config subtree is the live one.)
+
+Use `./sync-upstream.sh` to review upstream changes. It keeps a blobless clone of
+nixos-config in `~/.cache/themes-generator/` and tracks the last-reviewed upstream
+commit in `.upstream-synced` (gitignored):
 
 ```bash
-gh api repos/daphen/nixos-config/contents/dotfiles/themes/.config/themes/theme-manager.sh \
-  --jq '.content' | base64 -d > /tmp/daphen-theme-manager.sh
-diff /tmp/daphen-theme-manager.sh theme-manager.sh
+./sync-upstream.sh              # commits upstream since last mark
+./sync-upstream.sh files        # which files those commits touched
+./sync-upstream.sh diff theme-manager.sh   # local file vs upstream, full diff
+./sync-upstream.sh show templates/nvim-dark.template  # upstream patches for one file
+./sync-upstream.sh fetch        # refresh the daphen-themes/main ref (see below)
+./sync-upstream.sh mark         # record upstream HEAD as reviewed
 ```
+
+`fetch` "forks the subpart": it runs `git subtree split` on the themes directory,
+producing a standalone history with paths rewritten to the root (same layout as
+this repo), and publishes it as the local ref **`daphen-themes/main`**. That makes
+upstream commits directly browsable and cherry-pickable:
+
+```bash
+git log --oneline daphen-themes/main        # his themes history, 700+ commits
+git show daphen-themes/main:colors.json     # any file at his tip
+git cherry-pick <sha>                       # port one commit (3-way merge)
+```
+
+The split is deterministic — re-running `fetch` extends the same history in place.
+The ref must be updated by *pushing from* the cache clone (which `fetch` does);
+`git fetch` against a blobless clone fails with a bogus "repository corruption"
+pack error, because it can't serve blobs it never downloaded.
+
+Because histories are unrelated and both sides have diverged heavily (500+ line
+drift in theme-manager.sh), cherry-picks of older commits often conflict — for
+those, read the patch with `show` and port by hand. After reviewing, `mark`.
 
 As of 2026-06-28: this fork is ahead on `switch_theme` performance (front-loads
 ghostty/kitty/tmux/waybar so the visible terminal recolors immediately, and skips +
