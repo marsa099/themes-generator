@@ -525,9 +525,24 @@ PYEOF
             ;;
         "pi")
             local pi_dir="$HOME/.pi/agent/themes"
+            local pi_settings="$HOME/.pi/agent/settings.json"
             mkdir -p "$pi_dir"
-            cp "$generated_file" "$pi_dir/${theme_mode}.json"
-            log_success "Applied Pi coding agent ${theme_mode} theme"
+
+            # Keep one stable custom-theme name so Pi's theme watcher hot-reloads
+            # this file when the system switches between light and dark. Avoid
+            # "dark"/"light": those names collide with Pi's built-in themes.
+            cp "$generated_file" "$pi_dir/themes-generator.json"
+            rm -f "$pi_dir/dark.json" "$pi_dir/light.json"
+
+            local settings_tmp
+            settings_tmp=$(mktemp "$HOME/.pi/agent/settings.json.XXXXXX")
+            if [[ -f "$pi_settings" ]]; then
+                jq '.theme = "themes-generator"' "$pi_settings" > "$settings_tmp"
+            else
+                printf '{\n  "theme": "themes-generator"\n}\n' > "$settings_tmp"
+            fi
+            mv "$settings_tmp" "$pi_settings"
+            log_success "Applied and selected Pi coding agent ${theme_mode} theme"
             ;;
         "qutebrowser")
             local target_dir is_managed

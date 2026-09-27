@@ -20,6 +20,7 @@ This system uses a centralized `colors.json` file to generate theme configuratio
 - **Clipse** - Clipboard manager
 - **spotify-player** - Spotify TUI client
 - **opencode** - AI coding assistant
+- **Pi** - AI coding agent TUI
 
 ## Architecture
 
@@ -204,6 +205,7 @@ When you press `Super+Ctrl+T` (or your configured keybind), here's what happens:
 │  • Rofi        → update @import in config.rasi                  │
 │  • Clipse      → ~/.config/clipse/custom_theme.json             │
 │  • spotify-player → ~/.config/spotify-player/theme.toml         │
+│  • Pi          → ~/.pi/agent/themes/themes-generator.json       │
 │  • Tide        → fish -c source (prompt colors)                 │
 │                                                                 │
 │  System settings:                                               │
@@ -255,6 +257,7 @@ Each tool follows this pattern:
 | **Ghostty** | `generated/ghostty/{mode}.theme` | `~/.config/ghostty/themes/{mode}` | Local | Not in dotfiles. |
 | **Clipse** | `generated/clipse/{mode}.theme` | `~/.config/clipse/custom_theme.json` | Local | Not in dotfiles. |
 | **spotify-player** | `generated/spotify-player/{mode}.theme` | `~/.config/spotify-player/theme.toml` | Local | Not in dotfiles. |
+| **Pi** | `generated/pi/{mode}.theme` | `~/.pi/agent/themes/themes-generator.json` | Local | Stable custom-theme name enables hot reload. |
 | **Fish** | `generated/fish/{mode}.theme` | Generated only | N/A | Sourced by shell. |
 | **FZF** | `generated/fzf/{mode}.theme` | Generated only | N/A | Sourced by shell. |
 | **Tide** | `generated/tide/{mode}.theme` | Applied via `fish -c source` | N/A | Prompt colors. |
