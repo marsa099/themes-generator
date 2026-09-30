@@ -712,12 +712,13 @@ apply_system_theme() {
         fi
         dconf write /org/gnome/desktop/interface/color-scheme "'${gtk_theme}'" 2>/dev/null || true
         dconf write /org/gnome/desktop/interface/gtk-theme "'${dconf_gtk_theme}'" 2>/dev/null || true
-        # Update GTK_THEME for running fish shells, new processes, and systemd user services
+        # Do not pin GTK_THEME: running apps must follow the desktop preference.
+        # Clear overrides left by older versions (upstream fix 88e269f).
         if command -v fish &> /dev/null; then
-            fish -c "set -Ux GTK_THEME ${dconf_gtk_theme}" 2>/dev/null || true
+            fish --no-config -c 'set -eU GTK_THEME' 2>/dev/null || true
         fi
         if command -v systemctl &> /dev/null; then
-            systemctl --user set-environment GTK_THEME="${dconf_gtk_theme}" 2>/dev/null || true
+            systemctl --user unset-environment GTK_THEME 2>/dev/null || true
         fi
         log_success "Updated dconf color-scheme=${gtk_theme}, gtk-theme=${dconf_gtk_theme}"
     elif command -v gsettings &> /dev/null; then
