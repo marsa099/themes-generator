@@ -558,6 +558,13 @@ vim colors.json
 | Regenerate all | `./theme-manager.sh generate` |
 | Check status | `./theme-manager.sh status` |
 
+## Helium / Chromium live theme switching
+
+GTK uses a stable `ThemesGenerator` theme with separate light/dark variants,
+not startup-cached user CSS. Existing generated overrides are backed up on the
+next application. A one-time browser restart may be needed after migration.
+See [diagnosis, validation, and activation](docs/helium-live-theme.md).
+
 ## Upstream / Provenance
 
 This repo (`marsa099/themes-generator`) was originally forked from daphen's theme
