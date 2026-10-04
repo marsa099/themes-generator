@@ -15,6 +15,7 @@ fg         = "{{foreground.primary}}"
 fg_muted   = "{{foreground.muted}}"
 red        = "{{accent.red}}"
 orange     = "{{accent.orange}}"
+ui_accent  = "{{semantic.cursor}}"
 yellow     = "{{accent.yellow}}"
 green      = "{{accent.green}}"
 cyan       = "{{accent.cyan}}"
@@ -99,7 +100,7 @@ success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 vimcmd_symbol = "[❮](bold cyan)"
 vimcmd_replace_symbol = "[❮](bold yellow)"
-vimcmd_visual_symbol = "[❮](bold orange)"
+vimcmd_visual_symbol = "[❮](bold ui_accent)"
 
 # Disable auto-detected modules not in my format string
 [aws]

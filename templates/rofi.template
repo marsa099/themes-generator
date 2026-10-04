@@ -63,7 +63,7 @@ entry {
     border:             0;
     text-transform:     none;
     cursor:             text;
-    cursor-color:       @accent-orange;
+    cursor-color:       @accent-cursor;
     cursor-width:       2px;
 }
 

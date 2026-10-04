@@ -558,6 +558,19 @@ vim colors.json
 | Regenerate all | `./theme-manager.sh generate` |
 | Check status | `./theme-manager.sh status` |
 
+## Neutral UI accents
+
+`semantic.cursor` is the shared cursor/focus/UI accent: soft gray `#C4C4C4`
+in dark mode and charcoal `#595959` in light mode. GTK/Qt controls, active
+window borders, launcher cursors, and the main CLI branding use this token
+instead of orange. Text on accent-filled GTK controls uses `background.primary`
+for contrast. Niri borders and tab indicators read the same palette value.
+
+`accent.orange` remains a real color for warnings, terminal ANSI colors, syntax,
+and status indicators. Changing decorative accents therefore does not hide
+warnings or turn the entire syntax palette monochrome. Presets may override
+`semantic.cursor` intentionally.
+
 ## Helium / Chromium live theme switching
 
 GTK uses a stable `ThemesGenerator` theme with separate light/dark variants,

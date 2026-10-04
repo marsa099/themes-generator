@@ -54,5 +54,5 @@ inactive_tab_foreground {{foreground.muted}}
 inactive_tab_background {{background.primary}}
 
 # Window border colors
-active_border_color {{accent.orange}}
+active_border_color {{semantic.cursor}}
 inactive_border_color {{foreground.muted}}

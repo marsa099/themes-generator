@@ -229,7 +229,7 @@ window#waybar {
 }
 
 #custom-claude-focused.busy {
-  color: {{accent.orange}};
+  color: {{semantic.cursor}};
 }
 
 /* Currently-focused Helium browser profile. Hidden when the focused window
@@ -274,7 +274,7 @@ window#waybar {
   padding: 6px 14px;
   margin-right: 12px;
   font-weight: 500;
-  color: {{accent.orange}};
+  color: {{semantic.cursor}};
 }
 
 #tray {

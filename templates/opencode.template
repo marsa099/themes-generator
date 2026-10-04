@@ -2,16 +2,16 @@
   "$schema": "https://opencode.ai/theme.json",
   "theme": {
     "primary": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.green}}"
+      "dark": "{{semantic.cursor}}",
+      "light": "{{semantic.cursor}}"
     },
     "secondary": {
       "dark": "{{accent.purple}}",
       "light": "{{accent.purple}}"
     },
     "accent": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.cyan}}"
+      "dark": "{{semantic.cursor}}",
+      "light": "{{semantic.cursor}}"
     },
     "error": {
       "dark": "{{accent.red}}",
@@ -50,16 +50,16 @@
       "light": "{{background.secondary}}"
     },
     "border": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.orange}}"
+      "dark": "{{semantic.cursor}}",
+      "light": "{{semantic.cursor}}"
     },
     "borderActive": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.orange}}"
+      "dark": "{{semantic.cursor}}",
+      "light": "{{semantic.cursor}}"
     },
     "borderSubtle": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.orange}}"
+      "dark": "{{foreground.subtle}}",
+      "light": "{{foreground.subtle}}"
     },
     "diffAdded": {
       "dark": "{{accent.cyan}}",
@@ -134,8 +134,8 @@
       "light": "{{foreground.muted}}"
     },
     "markdownEmph": {
-      "dark": "{{accent.orange}}",
-      "light": "{{accent.orange}}"
+      "dark": "{{semantic.cursor}}",
+      "light": "{{semantic.cursor}}"
     },
     "markdownStrong": {
       "dark": "{{accent.red}}",

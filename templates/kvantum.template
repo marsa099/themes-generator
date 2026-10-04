@@ -56,8 +56,8 @@ light.color={{background.overlay}}
 mid.light.color={{background.overlay}}
 dark.color={{background.secondary}}
 mid.color={{background.overlay}}
-highlight.color={{accent.orange}}
-inactive.highlight.color={{accent.orange}}
+highlight.color={{semantic.cursor}}
+inactive.highlight.color={{semantic.cursor}}
 tooltip.base.color={{background.surface}}
 text.color={{foreground.primary}}
 window.text.color={{foreground.primary}}
@@ -281,7 +281,7 @@ indicator.size=10
 inherits=GenericFrame
 frame.element=group
 text.normal.color={{foreground.primary}}
-text.focus.color={{accent.orange}}
+text.focus.color={{semantic.cursor}}
 
 [TabBarFrame]
 inherits=GenericFrame

@@ -12,7 +12,7 @@ style:
     keyFgColor: "{{foreground.muted}}"
     valueFgColor: "{{foreground.primary}}"
     bgColor: "{{background.primary}}"
-    logoColor: "{{accent.orange}}"
+    logoColor: "{{semantic.cursor}}"
 
   proc_table:
     fgColor: "{{foreground.primary}}"
@@ -30,7 +30,7 @@ style:
     buttonBgColor: "{{background.selection}}"
     categoryFgColor: "{{accent.blue}}"
     linkDonateColor: "{{foreground.muted}}"
-    linkAskColor: "{{accent.orange}}"
+    linkAskColor: "{{semantic.cursor}}"
 
   dialog:
     fgColor: "{{foreground.primary}}"

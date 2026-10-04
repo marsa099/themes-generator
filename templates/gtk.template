@@ -6,19 +6,19 @@
 @define-color theme_fg_color {{foreground.primary}};
 @define-color theme_base_color {{background.primary}};
 @define-color theme_text_color {{foreground.primary}};
-@define-color theme_selected_bg_color {{accent.orange}};
-@define-color theme_selected_fg_color {{foreground.primary}};
+@define-color theme_selected_bg_color {{semantic.cursor}};
+@define-color theme_selected_fg_color {{background.primary}};
 @define-color theme_unfocused_bg_color {{background.secondary}};
 @define-color theme_unfocused_fg_color {{foreground.secondary}};
 @define-color theme_unfocused_base_color {{background.secondary}};
 @define-color theme_unfocused_text_color {{foreground.secondary}};
-@define-color theme_unfocused_selected_bg_color {{accent.orange}};
-@define-color theme_unfocused_selected_fg_color {{foreground.primary}};
+@define-color theme_unfocused_selected_bg_color {{semantic.cursor}};
+@define-color theme_unfocused_selected_fg_color {{background.primary}};
 
 /* Accent and semantic colors */
-@define-color accent_bg_color {{accent.orange}};
-@define-color accent_fg_color {{foreground.primary}};
-@define-color accent_color {{accent.orange}};
+@define-color accent_bg_color {{semantic.cursor}};
+@define-color accent_fg_color {{background.primary}};
+@define-color accent_color {{semantic.cursor}};
 
 @define-color destructive_bg_color {{accent.red}};
 @define-color destructive_fg_color {{background.primary}};
@@ -100,14 +100,14 @@ button:hover {
 
 button:active, button:checked {
     background-image: none;
-    background-color: {{accent.orange}};
-    color: {{foreground.primary}};
+    background-color: {{semantic.cursor}};
+    color: {{background.primary}};
 }
 
 button.suggested-action {
     background-image: none;
-    background-color: {{accent.orange}};
-    color: {{foreground.primary}};
+    background-color: {{semantic.cursor}};
+    color: {{background.primary}};
 }
 
 button.destructive-action {
@@ -149,17 +149,17 @@ entry {
     color: {{foreground.primary}};
     border-color: {{background.overlay}};
     border-radius: 6px;
-    caret-color: {{accent.orange}};
+    caret-color: {{semantic.cursor}};
 }
 
 entry:focus {
-    border-color: {{accent.orange}};
+    border-color: {{semantic.cursor}};
 }
 
 /* Selection */
 selection, *:selected {
-    background-color: {{accent.orange}};
-    color: {{foreground.primary}};
+    background-color: {{semantic.cursor}};
+    color: {{background.primary}};
 }
 
 /* Lists and rows */
@@ -203,9 +203,9 @@ check, radio {
 }
 
 check:checked, radio:checked {
-    background-color: {{accent.orange}};
+    background-color: {{semantic.cursor}};
     color: {{background.primary}};
-    border-color: {{accent.orange}};
+    border-color: {{semantic.cursor}};
 }
 
 /* Switch */
@@ -215,7 +215,7 @@ switch {
 }
 
 switch:checked {
-    background-color: {{accent.orange}};
+    background-color: {{semantic.cursor}};
 }
 
 /* Scale (sliders) - must override Adwaita's built-in styles */
@@ -230,8 +230,8 @@ scale trough {
 
 scale highlight,
 progressbar progress {
-    background-color: {{accent.orange}};
-    border-color: {{accent.orange}};
+    background-color: {{semantic.cursor}};
+    border-color: {{semantic.cursor}};
     border-radius: 3px;
 }
 
@@ -250,7 +250,7 @@ scale slider:hover {
 }
 
 scale slider:active {
-    border-color: {{accent.orange}};
+    border-color: {{semantic.cursor}};
 }
 
 scale slider:disabled {
@@ -265,8 +265,8 @@ levelbar trough {
 }
 
 levelbar block.filled {
-    background-color: {{accent.orange}};
-    border-color: {{accent.orange}};
+    background-color: {{semantic.cursor}};
+    border-color: {{semantic.cursor}};
 }
 
 levelbar block.empty {
@@ -295,7 +295,7 @@ progressbar trough {
 }
 
 progressbar progress {
-    background-color: {{accent.orange}};
+    background-color: {{semantic.cursor}};
 }
 
 /* Notebook tabs */
@@ -317,7 +317,7 @@ notebook header tab {
 notebook header tab:checked {
     background-color: {{background.primary}};
     color: {{foreground.primary}};
-    box-shadow: inset 0 -2px {{accent.orange}};
+    box-shadow: inset 0 -2px {{semantic.cursor}};
 }
 
 notebook header tab:hover {
@@ -325,7 +325,7 @@ notebook header tab:hover {
 }
 
 notebook header.top tab:checked {
-    box-shadow: inset 0 -2px {{accent.orange}};
+    box-shadow: inset 0 -2px {{semantic.cursor}};
 }
 
 

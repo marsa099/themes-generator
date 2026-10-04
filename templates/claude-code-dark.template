@@ -5,7 +5,7 @@
     "text": "{{foreground.primary}}",
     "inactive": "{{foreground.muted}}",
     "subtle": "{{foreground.subtle}}",
-    "claude": "{{accent.orange}}",
+    "claude": "{{semantic.cursor}}",
     "claudeShimmer": "{{accent.yellow}}",
     "success": "{{semantic.success}}",
     "error": "{{semantic.error}}",
@@ -29,11 +29,11 @@
     "diffAddedWord": "{{semantic.highlight_succ_word}}",
     "diffRemovedWord": "{{semantic.highlight_err_word}}",
 
-    "fastMode": "{{accent.orange}}",
+    "fastMode": "{{semantic.cursor}}",
     "fastModeShimmer": "{{accent.yellow}}",
 
     "permission": "{{accent.purple}}",
-    "permissionShimmer": "{{accent.orange}}",
+    "permissionShimmer": "{{semantic.cursor}}",
     "autoAccept": "{{accent.green}}",
     "planMode": "{{accent.cyan}}",
     "ide": "{{accent.blue}}",
@@ -50,13 +50,13 @@
     "foreground": "{{foreground.primary}}",
 
     "briefLabelYou": "{{foreground.primary}}",
-    "briefLabelClaude": "{{accent.orange}}",
+    "briefLabelClaude": "{{semantic.cursor}}",
     "rate_limit_fill": "{{accent.orange}}",
     "rate_limit_empty": "{{foreground.muted}}",
 
     "bashBorder": "{{background.overlay}}",
     "chromeYellow": "{{accent.yellow}}",
-    "clawd_body": "{{accent.orange}}",
+    "clawd_body": "{{semantic.cursor}}",
     "clawd_background": "{{background.primary}}",
 
     "red_FOR_SUBAGENTS_ONLY": "{{accent.red}}",

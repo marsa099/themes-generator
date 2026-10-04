@@ -764,9 +764,9 @@ apply_system_theme() {
         niri_config="$live_niri"
     fi
     if [[ -f "$niri_config" ]]; then
-        # Niri active border uses the brand orange in both themes for a
-        # consistent strong accent that pops against either background.
-        local active_color="#FF570D"
+        # Share the palette's neutral UI accent with cursors and controls.
+        local active_color
+        active_color=$(get_color "$theme_mode" "semantic.cursor")
         if [[ "$theme_mode" == "dark" ]]; then
             local inactive_color="#3A3A3A"
         else
@@ -774,12 +774,11 @@ apply_system_theme() {
         fi
         sed -i "s/active-color \"#[0-9a-fA-F]*\"/active-color \"${active_color}\"/g" "$niri_config"
         sed -i "s/inactive-color \"#[0-9a-fA-F]*\"/inactive-color \"${inactive_color}\"/g" "$niri_config"
-        # Tab indicator stays cursor-orange + readable inactive across both
-        # themes — restore after the global sed has overwritten them.
-        sed -i '/tab-indicator {/,/^    }/ {
-            s/active-color "#[0-9a-fA-F]*"/active-color "#FF570D"/
-            s/inactive-color "#[0-9a-fA-F]*"/inactive-color "#999999"/
-        }' "$niri_config"
+        # Keep the tab indicator consistent with the active window border.
+        sed -i "/tab-indicator {/,/^    }/ {
+            s/active-color \"#[0-9a-fA-F]*\"/active-color \"${active_color}\"/
+            s/inactive-color \"#[0-9a-fA-F]*\"/inactive-color \"#999999\"/
+        }" "$niri_config"
         log_success "Applied niri border colors for ${theme_mode} mode"
     fi
 }
