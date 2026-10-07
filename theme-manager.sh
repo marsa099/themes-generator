@@ -133,6 +133,22 @@ generate_all() {
     log_success "All themes generated for $theme_mode mode"
 }
 
+# Validate both cached palettes in one process; rebuild only when inputs or
+# generated outputs changed. This performs no desktop/application updates.
+prepare_theme_cache() {
+    python3 "$THEMES_DIR/theme-cache.py" --colors "$COLORS_FILE" \
+        --templates "$TEMPLATES_DIR" --generated "$GENERATED_DIR" || return 1
+    mapfile -t CACHED_THEME_TOOLS < <(jq -r '.tools[]' "$GENERATED_DIR/.theme-cache.json")
+}
+
+# Explicit cache warming shares the switch lock but never applies a theme.
+cache_themes() (
+    mkdir -p "$GENERATED_DIR" || return 1
+    exec 9>"$GENERATED_DIR/.theme-switch.lock" || return 1
+    flock -x 9 || return 1
+    prepare_theme_cache
+)
+
 # Helper: Determine target location for a tool
 # Returns 0 and sets $target_dir and $is_managed if found, 1 otherwise
 get_tool_target() {
@@ -586,7 +602,9 @@ PYEOF
             [[ "$theme_mode" == "dark" ]] && dark_pref="true"
             local other_mode="dark"
             [[ "$theme_mode" == "dark" ]] && other_mode="light"
-            generate_tool_theme "gtk" "$other_mode" > /dev/null || return 1
+            if [[ "${THEME_CACHE_READY:-0}" != 1 ]]; then
+                generate_tool_theme "gtk" "$other_mode" > /dev/null || return 1
+            fi
             local version base theme_dir settings_dir legacy backup mode variant css_file
             for version in 3 4; do
                 base="Adwaita"
@@ -784,59 +802,62 @@ apply_system_theme() {
 }
 
 # Switch theme mode
-switch_theme() {
+switch_theme() (
     local theme_mode=$1
-
-    if [[ "$theme_mode" != "dark" && "$theme_mode" != "light" ]]; then
+    if [[ "$theme_mode" != dark && "$theme_mode" != light && "$theme_mode" != toggle ]]; then
         log_error "Invalid theme mode: $theme_mode. Use 'dark' or 'light'"
         return 1
     fi
 
-    log_info "Switching to $theme_mode theme..."
+    # Serialize complete switches, not just cache builds. Resolve a queued toggle
+    # after taking the lock so rapid toggles do not race against the same mode.
+    mkdir -p "$GENERATED_DIR" || return 1
+    exec 9>"$GENERATED_DIR/.theme-switch.lock" || return 1
+    flock -x 9 || return 1
+    trap 'flock -u 9' EXIT
+    if [[ "$theme_mode" == toggle ]]; then
+        if [[ "$(get_current_theme)" == dark ]]; then theme_mode=light; else theme_mode=dark; fi
+    fi
 
-    # Write theme mode to file (this triggers file watchers like Neovim)
-    set_theme_mode "$theme_mode"
+    local -a CACHED_THEME_TOOLS=()
+    prepare_theme_cache || return 1
+    local THEME_CACHE_READY=1
+    log_info "Switching to $theme_mode theme (cached)..."
 
-    # Front-load the tools the user actually sees switch. Order matters:
-    # signal dconf the SECOND ghostty's theme file is on disk so its DBus
-    # reload kicks off in parallel with everything that follows. Tmux and
-    # waybar are cheap to reload (source-file / live CSS) and follow
-    # immediately after. Kitty is here too — its live set-colors reload is
-    # fast (~0.2s) but only useful if it runs BEFORE the ~1.2s generate_all
-    # pass, otherwise the terminal the user is staring at lags the toggle.
-    # claude-code is front-loaded too: it's a cheap dotfiles.json write +
-    # live reload, and if it lagged into generate_all the TUI would keep
-    # rendering the OLD theme's blue on the freshly-switched terminal
-    # background for ~1.2s before correcting — a visible colour flash.
-    # Install the reloadable GTK theme before publishing its name to apps.
-    generate_tool_theme "gtk"         "$theme_mode" > /dev/null || return 1
-    apply_tool_theme    "gtk"         "$theme_mode" || return 1
-    generate_tool_theme "ghostty"     "$theme_mode" > /dev/null
-    apply_tool_theme    "ghostty"     "$theme_mode"
-    signal_color_scheme "$theme_mode"
-    generate_tool_theme "kitty"       "$theme_mode" > /dev/null
-    generate_tool_theme "tmux"        "$theme_mode" > /dev/null
-    generate_tool_theme "waybar"      "$theme_mode" > /dev/null
-    generate_tool_theme "claude-code" "$theme_mode" > /dev/null
-    apply_tool_theme    "kitty"       "$theme_mode"
-    apply_tool_theme    "tmux"        "$theme_mode"
-    apply_tool_theme    "waybar"      "$theme_mode"
-    apply_tool_theme    "claude-code" "$theme_mode"
+    # Install GTK's two variants and Ghostty's selected file before announcing
+    # the desktop preference. Neither is generated during a cache-hit switch.
+    local tool
+    for tool in gtk ghostty; do
+        if [[ -f "$GENERATED_DIR/$tool/$theme_mode.theme" ]]; then
+            apply_tool_theme "$tool" "$theme_mode" || return 1
+        fi
+    done
 
-    # Generate and apply the rest
-    generate_all "$theme_mode"
-    apply_all "$theme_mode"
+    # Start the remaining independent adapters together. Slow RPC calls or
+    # extension builds no longer hold up the next app's file/reload update.
+    local -a pids=() names=()
+    for tool in "${CACHED_THEME_TOOLS[@]}"; do
+        [[ "$tool" == gtk || "$tool" == ghostty ]] && continue
+        (exec 9>&-; apply_tool_theme "$tool" "$theme_mode") &
+        pids+=("$!")
+        names+=("$tool")
+    done
+    local failed=0 i
+    set_theme_mode "$theme_mode" || failed=1
+    signal_color_scheme "$theme_mode" || failed=1
+    apply_system_theme "$theme_mode" || failed=1
+    for i in "${!pids[@]}"; do
+        if ! wait "${pids[$i]}"; then
+            log_error "Theme application failed: ${names[$i]}"
+            failed=1
+        fi
+    done
+    [[ "$failed" == 0 ]] || return 1
 
-    # Rest of system-wide settings (niri border, GTK env vars, etc.) —
-    # the dconf write inside this is now a no-op but kept for idempotence.
-    apply_system_theme "$theme_mode"
-
-    # Prefer live theme updates. Restart only when explicitly requested;
-    # toggling appearance must not interrupt a call or discard app state.
-    restart_electron_apps
-
+    # Do not let explicitly restarted apps inherit the switch lock.
+    (exec 9>&-; restart_electron_apps)
     log_success "Theme switched to $theme_mode mode"
-}
+)
 
 # Legacy fallback for apps that still fail to follow system appearance.
 # Opt in with THEMES_RESTART_ELECTRON=1; this can interrupt calls/unsaved work.
@@ -881,12 +902,7 @@ restart_electron_apps() {
 
 # Toggle between light and dark
 toggle_theme() {
-    local current_theme=$(get_current_theme)
-    if [[ "$current_theme" == "dark" ]]; then
-        switch_theme "light"
-    else
-        switch_theme "dark"
-    fi
+    switch_theme toggle
 }
 
 # Auto-detect and apply system theme
@@ -977,6 +993,7 @@ Theme Manager - Centralized theme management for dotfiles
 Usage: $0 [COMMAND] [OPTIONS]
 
 Commands:
+    cache               Prepare/validate both cached themes without applying
     generate [MODE]     Generate themes for specified mode (dark/light)
     apply [MODE]        Apply themes for specified mode (dark/light)
     switch [MODE]       Switch to specified theme mode (dark/light)
@@ -1004,6 +1021,9 @@ main() {
     check_dependencies
 
     case "${1:-}" in
+        "cache")
+            cache_themes
+            ;;
         "generate")
             generate_all "$2"
             ;;

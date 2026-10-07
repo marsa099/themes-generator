@@ -18,6 +18,8 @@ class ElectronRestartTest(unittest.TestCase):
                 env['THEMES_RESTART_ELECTRON'] = opt_in
             script = '''
 source "$1"
+GENERATED_DIR="$HOME/generated"
+prepare_theme_cache() { CACHED_THEME_TOOLS=(); }
 # All side effects are replaced before exercising the real switch function.
 set_theme_mode() { :; }
 generate_tool_theme() { :; }

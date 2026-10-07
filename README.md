@@ -155,7 +155,7 @@ The `theme-processor.py` script:
 ./theme-manager.sh apply dark
 ./theme-manager.sh apply light
 
-# Switch theme (generate + apply)
+# Switch theme (validate/rebuild cache + grouped application)
 ./theme-manager.sh switch dark
 ./theme-manager.sh switch light
 
@@ -185,11 +185,11 @@ When you press `Super+Ctrl+T` (or your configured keybind), here's what happens:
                       ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  theme-manager.sh toggle                                        │
-│  1. Read current theme from ~/.config/theme_mode                │
-│  2. Write new theme ("dark" or "light") to file                 │
-│  3. Generate all themes for the new mode                        │
-│  4. Apply all themes                                            │
-│  5. Apply system-wide settings (GTK, gsettings)                 │
+│  1. Lock switching; read current mode                           │
+│  2. Validate both cached themes; rebuild only if stale          │
+│  3. Install GTK variants and the Ghostty theme file             │
+│  4. Launch other app adapters together; publish new mode        │
+│  5. Signal system preference; wait for app adapters             │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
                       ▼
@@ -558,6 +558,32 @@ vim colors.json
 | Regenerate all | `./theme-manager.sh generate` |
 | Check status | `./theme-manager.sh status` |
 
+## Cached, grouped theme switching
+
+Both modes are cached in `generated/`, with content hashes in
+`generated/.theme-cache.json`. Palette, template, or processor changes invalidate
+the cache automatically; missing or modified generated files are repaired too.
+A rebuild renders all tools/modes in one Python process before publishing files.
+Failed generation stops the switch before changing the desktop.
+
+```sh
+./theme-manager.sh cache  # Warm/validate both modes; no desktop changes
+```
+
+Switches first install GTK variants and the selected Ghostty file. The remaining
+app adapters then run concurrently, instead of generating/applying apps in a
+long serial chain. Each adapter runs once. Complete switches are locked to avoid
+overlapping applications; rapid queued toggles read the mode after acquiring the
+lock. Electron restarts remain opt-in.
+
+Measured locally (2026-10-07): **60 ms** median for warm-cache preparation,
+including Bash/Python startup and output validation, versus approximately
+**1.1 s** for the old generation pass. A cold rebuild of both modes took **74 ms**
+thanks to batching instead of starting Python separately for every tool.
+These are preparation timings, not total desktop redraw latency. File-watching
+apps can react before others, and slow app reloads/builds still take their own
+time; this is tighter grouping, not an atomic all-app/frame-synchronized switch.
+
 ## Neutral UI accents
 
 `semantic.cursor` is the shared cursor/focus/UI accent: soft gray `#C4C4C4`
@@ -646,8 +672,7 @@ Because histories are unrelated and both sides have diverged heavily (500+ line
 drift in theme-manager.sh), cherry-picks of older commits often conflict — for
 those, read the patch with `show` and port by hand. After reviewing, `mark`.
 
-As of 2026-06-28: this fork is ahead on `switch_theme` performance (front-loads
-ghostty/kitty/tmux/waybar so the visible terminal recolors immediately, and skips +
-cleans up stale `/tmp/kitty-<pid>` sockets — both of which kept theme toggles slow).
+As of 2026-10-07: this fork caches both palettes and groups app updates in
+`switch_theme` (see above), while retaining stale Kitty socket cleanup.
 daphen's version has features this one lacks (`apply_wallpaper`, plus `slk`,
 `endcord` light/dark split, and `quickshell-client` templates) if they're ever wanted.

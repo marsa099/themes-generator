@@ -70,6 +70,10 @@ class GtkThemesTest(unittest.TestCase):
         self.assertEqual(custom.read_text(), '/* user CSS */')
         self.assertTrue(linked.is_symlink())
 
+    def test_cached_gtk_application_does_not_regenerate(self):
+        self.shell('THEME_CACHE_READY=1; generate_tool_theme() { return 1; }; apply_tool_theme gtk dark')
+        self.assertTrue((self.home / 'data/themes/ThemesGenerator/gtk-3.0/gtk-dark.css').exists())
+
     def test_generation_failure_does_not_retire_existing_css(self):
         directory = self.home / '.config/gtk-3.0'
         directory.mkdir(parents=True)
@@ -93,6 +97,7 @@ signal_color_scheme dark
     def test_gtk_installed_before_preference_signal(self):
         output = self.shell('''
 set_theme_mode() { :; }
+prepare_theme_cache() { CACHED_THEME_TOOLS=(gtk); }
 generate_tool_theme() { :; }
 apply_tool_theme() { printf 'apply:%s\\n' "$1"; }
 signal_color_scheme() { echo signal; }
