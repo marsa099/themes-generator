@@ -571,6 +571,18 @@ and status indicators. Changing decorative accents therefore does not hide
 warnings or turn the entire syntax palette monochrome. Presets may override
 `semantic.cursor` intentionally.
 
+## Electron apps: live updates, no automatic restarts
+
+Normal toggles leave Teams for Linux, Slack, and Vesktop running. The previous
+unconditional restart workaround predates the reloadable GTK theme fix and
+could interrupt calls or unsaved work. Teams has a live system-theme update
+path; Slack/Vesktop behavior still depends on their versions and settings.
+
+If an app remains stuck, first check its system-theme setting and restart that
+app manually. The legacy restart-all-running-Electron-clients fallback is
+available explicitly with `THEMES_RESTART_ELECTRON=1 ./theme-manager.sh toggle`.
+**This opt-in can interrupt calls and unsaved work; do not enable it globally.**
+
 ## Helium / Chromium live theme switching
 
 GTK uses a stable `ThemesGenerator` theme with separate light/dark variants,

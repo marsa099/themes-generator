@@ -831,22 +831,19 @@ switch_theme() {
     # the dconf write inside this is now a no-op but kept for idempotence.
     apply_system_theme "$theme_mode"
 
-    # Some Electron apps (Vesktop, Slack) detect the theme change live
-    # but instantly revert to their cached value, so they need a full
-    # restart to pick up the new theme.
+    # Prefer live theme updates. Restart only when explicitly requested;
+    # toggling appearance must not interrupt a call or discard app state.
     restart_electron_apps
 
     log_success "Theme switched to $theme_mode mode"
 }
 
-# Restart Electron apps that don't honor live theme changes. Only
-# restarts the apps that are *currently running* so a toggle when
-# they're closed doesn't surprise-spawn them.
+# Legacy fallback for apps that still fail to follow system appearance.
+# Opt in with THEMES_RESTART_ELECTRON=1; this can interrupt calls/unsaved work.
+# Only apps that are already running are restarted.
 restart_electron_apps() {
-    # Electron-wrapped chat clients (Vesktop, teams-for-linux) don't honor
-    # nativeTheme, prefers-color-scheme, or in-process CSS reload reliably
-    # — Microsoft's Teams Web bundle in particular ignores every external
-    # signal we tried. The only working pattern is a hard restart.
+    [[ "${THEMES_RESTART_ELECTRON:-0}" == "1" ]] || return 0
+
     if pgrep -if vesktop >/dev/null 2>&1; then
         log_info "Restarting Vesktop…"
         pkill -if vesktop 2>/dev/null
